@@ -2,6 +2,7 @@ from datetime import datetime as dt
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as WebDriverOptions
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common.keys import Keys
 import time
 import csv
 
@@ -24,6 +25,9 @@ def get_source(url, options, params):
 	driver.get(url)
 	element = WebDriverWait(driver, 10)
 	time.sleep(3)
+	if params[4]:
+		webdriver.ActionChains(driver).send_keys(Keys.ESCAPE).perform()
+		time.sleep(3)
 	tdc = extract(driver.page_source, params)
 	if tdc:
 		save(url, tdc)
@@ -41,8 +45,9 @@ def clean(text):
 
 
 def extract(source, params):
+	init = 0
 	for i in range(params[1]):
-		init = source.find(params[0])
+		init = source.find(params[0], init+1)
 		text = source[init+params[2]:init+params[3]]
 	return clean(text)
 
@@ -58,8 +63,12 @@ def save(url, tdc):
 
 def main():
 	options = set_options()
-	urls = ['https://tkambio.com', 'https://rextie.com', 'https://kambista.com', 'https://securex.pe', 'https://tucambista.pe',	'https://cocosylucasbcp.com', 'https://cambioseguro.com/','https://cambiafx.pe/','https://dollarhouse.pe']
-	search = [('Venta:', 1, 27, 33), ('class="number"', 2, 15, 21), ('Venta', 1, 29, 35), ('class="pVenta"', 1, 15, 22), ('id="span-venta-tc"', 1, 19, 25), ('Venta:', 1, 74, 80), ('Dólar venta:', 1, 13, 19), ('tc_venta', 1, 11, 16)]
+	urls, search = [], []
+	with open(r'C:\Users\Gabriel Freundt\google drive\multi-sync\tipodecambio\fintechs.txt') as file:
+		data = csv.reader(file, delimiter=',')
+		for item in data:
+			urls.append(item[0])
+			search.append((item[1], int(item[2]), int(item[3]), int(item[4]), False if item[5] == "False" else True))
 	for url, params in zip(urls, search):
 		try:
 			get_source(url, options, params)
