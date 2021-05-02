@@ -5,24 +5,26 @@ import datetime as dt
 import time
 
 
-def find_html_path():
-    paths = (r"D:\Google Drive Backup\Multi-Sync\TipodeCambio", r"C:\users\gfreu\Google Drive\Multi-Sync\TipodeCambio")
+def find_path():
+    paths = (r'C:\Users\Gabriel Freundt\Google Drive\Multi-Sync\TipodeCambio',r"D:\Google Drive Backup\Multi-Sync\TipodeCambio", r"C:\users\gfreu\Google Drive\Multi-Sync\TipodeCambio")
     for path in paths:
         if os.path.exists(path):
             return path
 
-MAIN_PATH = find_html_path()
+MAIN_PATH = find_path()
 
 
 app = Flask(__name__)
 
 @app.route("/dog")
 def index():
-    latest = updater.main()
-    latest = [f'{i[0]:.<30} {i[1]}    {i[2]}' for i in latest]
-    return render_template('index.html', latest=latest)
+	with open(os.path.join(MAIN_PATH, 'TDC_fixed.txt'), mode='r') as file:
+		latest = [i for i in file.readlines()]
+		return render_template('index.html', latest=latest)
 
 #return render_template("dashboard.html", date=date, time=time, data=data)
 
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
+
+
