@@ -1,1 +1,1 @@
-python "C:\Users\Gabriel Freundt\Google Drive\Multi-Sync\TipodeCambio\tdc.py"
+python "C:\Users\Gabriel Freundt\tdc\tdc.py"
