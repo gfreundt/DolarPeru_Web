@@ -7,6 +7,7 @@ from selenium.webdriver.common.keys import Keys
 import time
 import csv
 import os
+from statistics import mean
 
 
 class Basics:
@@ -21,6 +22,7 @@ class Basics:
 		self.VAULT_FILE = os.path.join(base_path, data_path,'TDC_vault.txt')
 		self.ACTIVE_FILE = os.path.join(base_path, data_path,'TDC.txt')
 		self.FIXED_FILE = os.path.join(base_path, data_path,'TDC_fixed.txt')
+		self.AVG_FILE = os.path.join(base_path, data_path,'TDC_fixed.txt')
 
 	def find_path(self):
 	    paths = (r'C:\Users\Gabriel Freundt\Google Drive\Multi-Sync',r'D:\Google Drive Backup\Multi-Sync', r'C:\users\gfreu\Google Drive\Multi-Sync')
@@ -98,8 +100,14 @@ def analysis():
 		data = [[i[0], i[1], (dt.strptime(i[2], '%Y-%m-%d %H:%M:%S')-dt.strptime(zero_time, '%Y-%m-%d %H:%M:%S')).total_seconds()/3600] for i in data]
 		fintechs = list(set([i[0] for i in data]))
 		datapoints = {unique: [(f'{float(i[1]):.4f}', i[2]) for i in data if i[0] == unique] for unique in fintechs}
+
+		# Add Average
+		averagetc = mean([float(datapoints[f][-1][0]) for f in fintechs if float(datapoints[f][-1][0]) > 0])
+		averageh = mean([float(datapoints[f][-1][1]) for f in fintechs if float(datapoints[f][-1][0]) > 0])
+		datapoints.update({'Promedio':[(f'{averagetc:.4f}',averageh)]})
+
 	with open(active.FIXED_FILE, mode='w') as file:
-		data = [(f, datapoints[f][-1][0],dt.strftime(dt.strptime(zero_time, '%Y-%m-%d %H:%M:%S') + delta(hours = datapoints[f][-1][1]),'%H:%M:%S')) for f in fintechs]
+		data = [(f, datapoints[f][-1][0],dt.strftime(dt.strptime(zero_time, '%Y-%m-%d %H:%M:%S') + delta(hours = datapoints[f][-1][1]),'%H:%M:%S')) for f in (fintechs+['Promedio'])]
 		for i in sorted(data, key=lambda x:x[1]):
 			file.write(f'{i[0]:<30} {i[1]}    {i[2]}' + '\n')
 
@@ -122,4 +130,5 @@ def main():
 
 
 active = Basics()
-main()
+#main()
+analysis()
