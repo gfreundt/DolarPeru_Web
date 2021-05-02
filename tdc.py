@@ -15,7 +15,7 @@ class Basics:
 		if not base_path:
 			print("PATH NOT FOUND")
 			quit()
-		data_path = os.path.join('tipodecambio', 'data')
+		data_path = os.path.join('tdc', 'data')
 		self.CHROMEDRIVER = os.path.join(base_path, 'chromedriver.exe')
 		self.FINTECHS_FILE = os.path.join(base_path, data_path, 'fintechs.txt')
 		self.VAULT_FILE = os.path.join(base_path, data_path,'TDC_vault.txt')
@@ -23,7 +23,7 @@ class Basics:
 		self.FIXED_FILE = os.path.join(base_path, data_path,'TDC_fixed.txt')
 
 	def find_path(self):
-	    paths = (r'C:\Users\Gabriel Freundt\google drive\multi-sync',r'D:\Google Drive Backup\Multi-Sync', r'C:\users\gfreu\Google Drive\Multi-Sync')
+	    paths = (r'C:\Users\Gabriel Freundt',r'D:\Google Drive Backup\Multi-Sync', r'C:\users\gfreu\Google Drive\Multi-Sync')
 	    for path in paths:
 	        if os.path.exists(path):
 	            return path
