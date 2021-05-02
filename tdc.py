@@ -110,14 +110,13 @@ def main():
 	with open(active.FINTECHS_FILE) as file:
 		data = csv.reader(file, delimiter=',')
 		for item in data:
-			print(item[0],len(item))
 			urls.append(item[1])
 			search.append((item[2], int(item[3]), int(item[4]), int(item[5]), False if item[6] == "False" else True))
 	for url, params in zip(urls, search):
 		try:
 			get_source(url, options, params)
 		except:
-			print(url)
+			pass
 	file_extract_recent(1000)
 	analysis()
 
