@@ -49,7 +49,7 @@ def get_source(url, options, params):
 	time.sleep(1)
 	if params[4]:
 		webdriver.ActionChains(driver).send_keys(Keys.ESCAPE).perform()
-		time.sleep(1)
+		time.sleep(3)
 	tdc = extract(driver.page_source, params)
 	if tdc:
 		save(url, tdc)
@@ -100,15 +100,9 @@ def analysis():
 		datapoints = {unique: [(f'{float(i[1]):.4f}', i[2]) for i in data if i[0] == unique] for unique in fintechs}
 	with open(active.FIXED_FILE, mode='w') as file:
 		data = [(f, datapoints[f][-1][0],dt.strftime(dt.strptime(zero_time, '%Y-%m-%d %H:%M:%S') + delta(hours = datapoints[f][-1][1]),'%H:%M:%S')) for f in fintechs]
-		for i in data:
+		for i in sorted(data, key=lambda x:x[1]):
 			file.write(f'{i[0]:<30} {i[1]}    {i[2]}' + '\n')
 
-
-
-def main():
-	return analysis()
-	
-		
 
 def main():
 	options = set_options()
@@ -122,10 +116,12 @@ def main():
 		try:
 			get_source(url, options, params)
 		except:
-			pass
+			print(url)
 	file_extract_recent(1000)
 	analysis()
 
 
 active = Basics()
 main()
+file_extract_recent(1000)
+analysis()

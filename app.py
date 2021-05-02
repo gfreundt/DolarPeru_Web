@@ -6,7 +6,7 @@ import time
 
 
 def find_path():
-    paths = (r'C:\Users\Gabriel Freundt\Google Drive\Multi-Sync\TipodeCambio',r"D:\Google Drive Backup\Multi-Sync\TipodeCambio", r"C:\users\gfreu\Google Drive\Multi-Sync\TipodeCambio")
+    paths = (r'C:\Users\Gabriel Freundt\Google Drive\Multi-Sync\tdcData\data',r"D:\Google Drive Backup\Multi-Sync\tdcData\data", r"C:\users\gfreu\Google Drive\Multi-Sync\tdcData\data")
     for path in paths:
         if os.path.exists(path):
             return path
