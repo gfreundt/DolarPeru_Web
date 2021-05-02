@@ -130,5 +130,4 @@ def main():
 
 
 active = Basics()
-#main()
-analysis()
+main()
