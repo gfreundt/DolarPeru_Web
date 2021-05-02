@@ -15,7 +15,7 @@ class Basics:
 		if not base_path:
 			print("PATH NOT FOUND")
 			quit()
-		data_path = os.path.join('tdc', 'data')
+		data_path = os.path.join('tdcData', 'data')
 		self.CHROMEDRIVER = os.path.join(base_path, 'chromedriver.exe')
 		self.FINTECHS_FILE = os.path.join(base_path, data_path, 'fintechs.txt')
 		self.VAULT_FILE = os.path.join(base_path, data_path,'TDC_vault.txt')
