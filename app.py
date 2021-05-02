@@ -14,11 +14,12 @@ def find_path():
 main_path = find_path()
 DATA_PATH = os.path.join(main_path, 'data')
 HTML_PATH = os.path.join(main_path, 'templates')
+CSS_PATH = os.path.join(main_path, 'static')
 
 print(HTML_PATH)
 
 
-app = Flask(__name__, template_folder=HTML_PATH)
+app = Flask(__name__, template_folder=HTML_PATH, static_folder=CSS_PATH)
 
 @app.route("/dog")
 def index():
