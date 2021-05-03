@@ -167,7 +167,7 @@ def main():
 		except:
 			pass
 	file_extract_recent(2500)
-	analysis1()
+	analysis()
 
 
 active = Basics()
