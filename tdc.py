@@ -1,3 +1,5 @@
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 from datetime import datetime as dt
 from datetime import timedelta as delta
 from selenium import webdriver
@@ -22,7 +24,7 @@ class Basics:
 		self.VAULT_FILE = os.path.join(base_path, data_path,'TDC_vault.txt')
 		self.ACTIVE_FILE = os.path.join(base_path, data_path,'TDC.txt')
 		self.FIXED_FILE = os.path.join(base_path, data_path,'TDC_fixed.txt')
-		self.AVG_FILE = os.path.join(base_path, data_path,'TDC_fixed.txt')
+		self.AVG_FILE = os.path.join(base_path, data_path,'TDC_average.txt')
 
 	def find_path(self):
 	    paths = (r'C:\Users\Gabriel Freundt\Google Drive\Multi-Sync',r'D:\Google Drive Backup\Multi-Sync', r'C:\users\gfreu\Google Drive\Multi-Sync')
@@ -77,11 +79,11 @@ def extract(source, params):
 
 
 def save(url, tdc):
-	now = dt.now()
-	time_date = now.strftime('%Y-%m-%d %H:%M:%S')
+	
+	#time_date = now.strftime('%Y-%m-%d %H:%M:%S')
 	with open(active.VAULT_FILE, mode='a', encoding='utf-8', newline="\n") as file:
 		data = csv.writer(file, delimiter=',')
-		data.writerow([url, tdc, time_date])
+		data.writerow([url, tdc, active.time_date])
 
 
 def file_extract_recent(n):
@@ -96,20 +98,59 @@ def file_extract_recent(n):
 def analysis():
 	with open(active.ACTIVE_FILE, mode='r') as file:
 		data = [i for i in csv.reader(file, delimiter=',')]
-		zero_time = data[0][2]
-		data = [[i[0], i[1], (dt.strptime(i[2], '%Y-%m-%d %H:%M:%S')-dt.strptime(zero_time, '%Y-%m-%d %H:%M:%S')).total_seconds()/3600] for i in data]
+		zero_time = dt.strptime(data[0][2], '%Y-%m-%d %H:%M:%S')
+		data = [[i[0], i[1], (dt.strptime(i[2], '%Y-%m-%d %H:%M:%S')-zero_time).total_seconds()/3600] for i in data]
 		fintechs = list(set([i[0] for i in data]))
 		datapoints = {unique: [(f'{float(i[1]):.4f}', i[2]) for i in data if i[0] == unique] for unique in fintechs}
 
-		# Add Average
-		averagetc = mean([float(datapoints[f][-1][0]) for f in fintechs if float(datapoints[f][-1][0]) > 0])
-		averageh = mean([float(datapoints[f][-1][1]) for f in fintechs if float(datapoints[f][-1][0]) > 0])
-		datapoints.update({'Promedio':[(f'{averagetc:.4f}',averageh)]})
+	# Add Average to Dataset
+	averagetc = mean([float(datapoints[f][-1][0]) for f in fintechs if float(datapoints[f][-1][0]) > 0])
+	averageh = mean([float(datapoints[f][-1][1]) for f in fintechs if float(datapoints[f][-1][0]) > 0])
+	datapoints.update({'Promedio':[(f'{averagetc:.4f}',averageh)]})
 
-	with open(active.FIXED_FILE, mode='w') as file:
-		data = [(f, datapoints[f][-1][0],dt.strftime(dt.strptime(zero_time, '%Y-%m-%d %H:%M:%S') + delta(hours = datapoints[f][-1][1]),'%H:%M:%S')) for f in (fintechs+['Promedio'])]
-		for i in sorted(data, key=lambda x:x[1]):
-			file.write(f'{i[0]:<30} {i[1]}    {i[2]}' + '\n')
+	# Append Text File with new Average
+	item = [f'{averagetc:.4f}', active.time_date]
+	with open(active.AVG_FILE, mode='a', newline='') as file:
+		csv.writer(file, delimiter=",").writerow(item)
+
+	# Create Text File for Web Update
+	datax = [(datapoints[f][-1][0], f, dt.strftime(zero_time + delta(hours = datapoints[f][-1][1]),'%H:%M:%S')) for f in (fintechs+['Promedio'])]
+	with open(active.FIXED_FILE, mode='w', newline='') as file:
+		for i in sorted(datax, key=lambda x:x[0]):
+			csv.writer(file, delimiter=",").writerow(i)
+
+
+def analysis2():
+
+	# Create Intraday Graph
+	#print(data)
+	with open(active.AVG_FILE, mode='r') as file:
+		data = [i for i in csv.reader(file, delimiter=',')]
+		start_today7am = dt.strptime(dt.strftime(dt.now(),'%Y-%m-%d')+' 07:00:00', '%Y-%m-%d %H:%M:%S')
+		finish_today10pm = dt.strptime(dt.strftime(dt.now(),'%Y-%m-%d')+' 23:00:00', '%Y-%m-%d %H:%M:%S')
+
+		datax = [(float(i[0]), i[1]) for i in data if dt.strptime(i[1],'%Y-%m-%d %H:%M:%S')>start_today7am]
+		datax = [(float(i[0]), dt.strptime(i[1],'%Y-%m-%d %H:%M:%S')) for i in data if dt.strptime(i[1],'%Y-%m-%d %H:%M:%S')>start_today7am]
+
+	#graph(datax, start_today7am, finish_today10pm)
+
+
+def graph(data, start, end):
+
+	plt.rcParams['figure.figsize'] = (16, 10)
+	y = [i[0] for i in data]
+	x = [i[1] for i in data]
+	plt.plot_date(x,y)
+	#xt = [dt.strptime(str(i), '%H') for i in range(7,23)]
+	#plt.xticks(xt, rotation='vertical')
+	plt.axis((start,end,3.5,4))
+	plt.ylabel(f'Tipo de Cambio (Venta)')
+	plt.xlabel('Hora', labelpad=20)
+	plt.suptitle(f'Cotización de Hoy \n({dt.strftime(x[0], "%Y-%m-%d")})', size='xx-large', y=.98)
+	#	plt.grid(axis='y')
+	plt.show()
+		#plt.savefig(graph_filename)
+		#plt.close('all')
 
 
 def main():
@@ -125,9 +166,11 @@ def main():
 			get_source(url, options, params)
 		except:
 			pass
-	file_extract_recent(1000)
-	analysis()
+	file_extract_recent(2500)
+	analysis1()
 
 
 active = Basics()
+active.time_date = dt.now().strftime('%Y-%m-%d %H:%M:%S')
 main()
+#analysis()

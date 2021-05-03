@@ -3,6 +3,7 @@ from flask import Flask, redirect, url_for, render_template, request
 import updater
 import datetime as dt
 import time
+import csv
 
 
 def find_path():
@@ -24,7 +25,7 @@ app = Flask(__name__, template_folder=HTML_PATH, static_folder=CSS_PATH)
 @app.route("/dog")
 def index():
 	with open(os.path.join(DATA_PATH, 'TDC_fixed.txt'), mode='r') as file:
-		latest = [i for i in file.readlines()]
+		latest = [i for i in csv.reader(file, delimiter=',')]
 		return render_template('index.html', latest=latest)
 
 #return render_template("dashboard.html", date=date, time=time, data=data)
@@ -32,5 +33,3 @@ def index():
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0")
 
-
-#D:\Google Drive Backup\Multi-Sync\sharedData\templates
