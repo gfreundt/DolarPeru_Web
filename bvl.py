@@ -1,13 +1,8 @@
 import yagmail
 from datetime import datetime as dt
-from datetime import timedelta as delta
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options as WebDriverOptions
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.common.keys import Keys
-import time
 import csv
 import os
+import subprocess
 
 
 class Basics:
@@ -19,6 +14,8 @@ class Basics:
 		data_path = os.path.join('sharedData', 'data')
 		self.CHROMEDRIVER = os.path.join(base_path, 'chromedriver.exe')
 		self.BVL_FILE = os.path.join(base_path, data_path, 'bvl.csv')
+		self.HTML_PATH = os.path.join(base_path, data_path, 'html')
+		self.EXTRACT_FILE = os.path.join(self.HTML_PATH, r'www.bvl.com.pe\mercado\movimientos-diarios.html')
 
 	def find_path(self):
 	    paths = (r'C:\Users\Gabriel Freundt\Google Drive\Multi-Sync',r'D:\Google Drive Backup\Multi-Sync', r'C:\users\gfreu\Google Drive\Multi-Sync')
@@ -26,32 +23,20 @@ class Basics:
 	        if os.path.exists(path):
 	            return path
 
-def set_options():
-	options = WebDriverOptions()
-	options.add_argument("--window-size=800,800")
-	options.add_argument("--headless")
-	options.add_argument("--disable-gpu")
-	options.add_argument("--silent")
-	options.add_argument("--disable-notifications")
-	options.add_argument("--incognito")
-	options.add_argument("--log-level=3")
-	options.add_experimental_option('excludeSwitches', ['enable-logging'])
-	return options
-
-
 def get_source(url):
-	driver = webdriver.Chrome(active.CHROMEDRIVER, options=options)
-	driver.get(url)
-	element = WebDriverWait(driver, 10)
-	time.sleep(3)
-	return driver.page_source
+	#Get Full HTML
+	#cmd = '''d:\"program files\winhttrack\httrack.exe" https://www.bvl.com.pe/mercado/movimientos-diarios -O "D:\Google Drive Backup\Multi-Sync\sharedData\data\html" --quiet'''
+	#subprocess.call(cmd)
+	subprocess.call('bvl_scrape.bat')
+	with open(active.EXTRACT_FILE, 'r') as file:
+		return file.read()
 
-
+	
 def get_string(raw, idx):
 	r = ''
 	while True:
 		s = raw[idx:idx+1]
-		if s == '"' or s=="<":
+		if s=="<":
 			return r.strip()
 		else:
 			r += s
@@ -61,37 +46,45 @@ def codes(raw):
 	idx = 0
 	extract=[]
 	while True:
-		nidx = raw.find('ng-star-inserted" title=', idx) + 25
+		nidx = raw.find('</dt></dl><dl><dt>', idx) + 18
+		if nidx == 17:
+			return sorted(extract)
 		e = get_string(raw, nidx)
 		extract.append(e)
-		if e == 'XOM':
-			return extract[1::3]
-		else:
-			idx = int(nidx)
-
-def prices(raw):
-	idx = 0
-	extract=[]
-	while idx<len(raw):
-		nidx = raw.find('"amount"', idx) + 20
-		if nidx == 19:
-			return extract
-		e = get_string(raw, nidx)
-		if not e:
-			extract.append('0.00')
-		elif e[0] == "U" or e[0] == "S":
-			extract.append(e)
 		idx = int(nidx)
 
-def combine(codes, prices):
-	r = [['Nemónico','Anterior','Apertura','Última','Monto']]
-	for n, code in enumerate(codes):
-		r.append([code] + [prices[i] for i in range(n*4, n*4+4)])
+
+def prices(raw, codes):
+	extract=[]
+	for code in codes:
+		nidx = raw.find(">"+code+"<") + len(code) + 12
+		e = get_string(raw, nidx).replace(',','')
+		extract.append(float(e))
+	return list(zip(codes, extract, [dt.strftime(dt.now(),'%d-%m-%Y')]*len(codes)))
+
+
+def combine(prices):
+	final = []
+	with open(active.BVL_FILE, mode='r') as file:
+		content = [i for i in csv.reader(file, delimiter=",")]
+	# upodate all current codes with new information (if it exists) or copy current one
+	for code in content[1:]:
+		appending = [i for i in prices if i[0] == code[0]]
+		if not appending:
+			to_append = code[:]
+		else:
+			to_append = appending[0]
+		final.append(to_append)
+	# add new codes from new information not in current codes
+	for code in prices:
+		if code not in final:
+			final.append(code)
+	# rewrite file
 	with open(active.BVL_FILE, mode='w', newline="") as file:
-		w = csv.writer(file, delimiter="|")
-		for line in r:
+		w = csv.writer(file, delimiter=",")
+		w.writerow(['Nemónico', 'Última', 'Fecha'])
+		for line in sorted(final, key=lambda i:i[0]):
 			w.writerow(line)
-	return r
 
 
 def send_gmail(to, subject, text_content, attach):
@@ -106,10 +99,10 @@ def send_gmail(to, subject, text_content, attach):
 
 
 active = Basics()
-options=set_options()
 raw = get_source('https://www.bvl.com.pe/mercado/movimientos-diarios')
-
 codes = codes(raw)
-prices = prices(raw)
-combine(codes, prices)
+prices = prices(raw, codes)
+final = combine(prices)
+
 send_gmail('jlcastanedaherrera@gmail.com', 'Cierre BVL del ' + dt.strftime(dt.now(), '%Y.%m.%d'), 'Abrirlo como CSV con delimitador |', active.BVL_FILE)
+#send_gmail('gfreundt@losportales.com.pe', 'Cierre BVL del ' + dt.strftime(dt.now(), '%Y.%m.%d'), 'Abrirlo como CSV.', active.BVL_FILE)
