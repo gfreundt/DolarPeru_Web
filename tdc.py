@@ -26,6 +26,10 @@ class Basics:
 		self.FIXED_FILE = os.path.join(base_path, data_path,'TDC_fixed.txt')
 		self.AVG_FILE = os.path.join(base_path, data_path,'TDC_average.txt')
 
+		with open(self.FINTECHS_FILE) as file:
+			data = csv.reader(file, delimiter=',')
+			self.fintech_data = [{'name': item[0], 'url': item[1], 'search': (item[2], int(item[3]), int(item[4]), int(item[5]), False if item[6] == "False" else True), 'image': item[7]} for item in data]
+
 	def find_path(self):
 	    paths = (r'C:\Users\Gabriel Freundt\Google Drive\Multi-Sync',r'D:\Google Drive Backup\Multi-Sync', r'C:\users\gfreu\Google Drive\Multi-Sync')
 	    for path in paths:
@@ -79,8 +83,6 @@ def extract(source, params):
 
 
 def save(url, tdc):
-	
-	#time_date = now.strftime('%Y-%m-%d %H:%M:%S')
 	with open(active.VAULT_FILE, mode='a', encoding='utf-8', newline="\n") as file:
 		data = csv.writer(file, delimiter=',')
 		data.writerow([url, tdc, active.time_date])
@@ -104,23 +106,20 @@ def analysis():
 
 	# Add Average to Dataset
 	averagetc = round(mean([datapoints[f][-1] for f in fintechs if datapoints[f][-1] > 0]),4)
-	print('avg', averagetc)
-	#averageh = mean([float(datapoints[f][-1][1]) for f in fintechs if float(datapoints[f][-1][0]) > 0])
-	
 
 	# Append Text File with new Average
 	item = [f'{averagetc:.4f}', active.time_date]
 	with open(active.AVG_FILE, mode='a', newline='') as file:
 		csv.writer(file, delimiter=",").writerow(item)
 
-	# Create Text File for Web Update
-	datax = [(f, f'{datapoints[f][-1]:0<6}') for f in fintechs]
+	# Create Text File for Web 
+	datax = [([i['image'] for i in active.fintech_data if i['url'] == f][0], f, f'{datapoints[f][-1]:0<6}') for f in fintechs]
 	with open(active.FIXED_FILE, mode='w', newline='') as file:
 		w = csv.writer(file, delimiter=",")
 		# Append Average and Date
 		w.writerow([f'{averagetc:.4f}', data[-1][2][-8:], data[0][2][:10]]) # tc, time, date
 		# Append latest from each fintech
-		for i in sorted(datax, key=lambda x:x[0]):
+		for i in sorted(datax, key=lambda x:x[2]):
 			w.writerow(i)
 
 
@@ -159,9 +158,10 @@ def graph(data, start, end):
 
 def main():
 	options = set_options()
-	urls, search = [], []
+	urls, search, images = [], [], []
 	with open(active.FINTECHS_FILE) as file:
 		data = csv.reader(file, delimiter=',')
+		active.fintech_data = [{'name': item[0], 'url': item[1], 'search': (item[2], int(item[3]), int(item[4]), int(item[5]), False if item[6] == "False" else True), 'image': item[7]} for item in data]
 		for item in data:
 			urls.append(item[1])
 			search.append((item[2], int(item[3]), int(item[4]), int(item[5]), False if item[6] == "False" else True))
@@ -176,5 +176,5 @@ def main():
 
 active = Basics()
 active.time_date = dt.now().strftime('%Y-%m-%d %H:%M:%S')
-main()
-#analysis()
+#main()
+analysis()
