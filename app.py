@@ -25,8 +25,10 @@ app = Flask(__name__, template_folder=HTML_PATH, static_folder=CSS_PATH)
 @app.route("/dog")
 def index():
 	with open(os.path.join(DATA_PATH, 'TDC_fixed.txt'), mode='r') as file:
-		latest = [i for i in csv.reader(file, delimiter=',')]
-		return render_template('index.html', latest=latest)
+		data = [i for i in csv.reader(file, delimiter=',')]
+		promedio, promedio_time, promedio_date = data[0]
+		latest = data[1:]
+		return render_template('index.html', latest=latest, promedio=promedio, promedio_date=promedio_date, promedio_time=promedio_time)
 
 #return render_template("dashboard.html", date=date, time=time, data=data)
 

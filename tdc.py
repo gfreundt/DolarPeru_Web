@@ -98,15 +98,15 @@ def file_extract_recent(n):
 def analysis():
 	with open(active.ACTIVE_FILE, mode='r') as file:
 		data = [i for i in csv.reader(file, delimiter=',')]
-		zero_time = dt.strptime(data[0][2], '%Y-%m-%d %H:%M:%S')
-		data = [[i[0], i[1], (dt.strptime(i[2], '%Y-%m-%d %H:%M:%S')-zero_time).total_seconds()/3600] for i in data]
+		#zero_time = dt.strptime(data[0][2], '%Y-%m-%d %H:%M:%S')
 		fintechs = list(set([i[0] for i in data]))
-		datapoints = {unique: [(f'{float(i[1]):.4f}', i[2]) for i in data if i[0] == unique] for unique in fintechs}
+		datapoints = {unique: [float(i[1]) for i in data if i[0] == unique] for unique in fintechs}
 
 	# Add Average to Dataset
-	averagetc = mean([float(datapoints[f][-1][0]) for f in fintechs if float(datapoints[f][-1][0]) > 0])
-	averageh = mean([float(datapoints[f][-1][1]) for f in fintechs if float(datapoints[f][-1][0]) > 0])
-	datapoints.update({'Promedio':[(f'{averagetc:.4f}',averageh)]})
+	averagetc = round(mean([datapoints[f][-1] for f in fintechs if datapoints[f][-1] > 0]),4)
+	print('avg', averagetc)
+	#averageh = mean([float(datapoints[f][-1][1]) for f in fintechs if float(datapoints[f][-1][0]) > 0])
+	
 
 	# Append Text File with new Average
 	item = [f'{averagetc:.4f}', active.time_date]
@@ -114,10 +114,14 @@ def analysis():
 		csv.writer(file, delimiter=",").writerow(item)
 
 	# Create Text File for Web Update
-	datax = [(datapoints[f][-1][0], f, dt.strftime(zero_time + delta(hours = datapoints[f][-1][1]),'%H:%M:%S')) for f in (fintechs+['Promedio'])]
+	datax = [(f, f'{datapoints[f][-1]:0<6}') for f in fintechs]
 	with open(active.FIXED_FILE, mode='w', newline='') as file:
+		w = csv.writer(file, delimiter=",")
+		# Append Average and Date
+		w.writerow([f'{averagetc:.4f}', data[-1][2][-8:], data[0][2][:10]]) # tc, time, date
+		# Append latest from each fintech
 		for i in sorted(datax, key=lambda x:x[0]):
-			csv.writer(file, delimiter=",").writerow(i)
+			w.writerow(i)
 
 
 def analysis2():
@@ -172,5 +176,5 @@ def main():
 
 active = Basics()
 active.time_date = dt.now().strftime('%Y-%m-%d %H:%M:%S')
-main()
-#analysis()
+#main()
+analysis()

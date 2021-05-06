@@ -23,6 +23,7 @@ class Basics:
 	        if os.path.exists(path):
 	            return path
 
+
 def get_source(url):
 	#Get Full HTML
 	#cmd = '''d:\"program files\winhttrack\httrack.exe" https://www.bvl.com.pe/mercado/movimientos-diarios -O "D:\Google Drive Backup\Multi-Sync\sharedData\data\html" --quiet'''
@@ -41,6 +42,7 @@ def get_string(raw, idx):
 		else:
 			r += s
 			idx += 1
+
 
 def codes(raw):
 	idx = 0
@@ -97,7 +99,7 @@ def send_gmail(to, subject, text_content, attach):
 
 
 
-
+# Main
 active = Basics()
 raw = get_source('https://www.bvl.com.pe/mercado/movimientos-diarios')
 codes = codes(raw)
