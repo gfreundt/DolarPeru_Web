@@ -10,6 +10,7 @@ import time
 import csv
 import os
 from statistics import mean
+import subprocess
 
 
 class Basics:
@@ -51,18 +52,20 @@ def set_options():
 
 
 def get_source(url, options, params):
-	driver = webdriver.Chrome(active.CHROMEDRIVER, options=options)
-	driver.get(url)
-	element = WebDriverWait(driver, 10)
-	time.sleep(1)
+	print(url)
 	if params[4]:
-		webdriver.ActionChains(driver).send_keys(Keys.ESCAPE).perform()
-		time.sleep(3)
-	tdc = extract(driver.page_source, params)
+		raw = subprocess.check_output(['chrome.exe', '--headless', '--enable-logging', '--disable-gpu', '--dump-dom', url, '--virtual-time-budget=10000']).decode('utf-8')
+	else:
+		driver = webdriver.Chrome(active.CHROMEDRIVER, options=options)
+		driver.get(url)
+		element = WebDriverWait(driver, 10)
+		time.sleep(1)
+		raw = driver.page_source
+		driver.quit()
+	tdc = extract(raw, params)
 	if tdc:
 		save(url, tdc)
-	driver.quit()
-
+	
 
 def clean(text):
 	r = ''
@@ -161,7 +164,7 @@ def main():
 	urls, search, images = [], [], []
 	with open(active.FINTECHS_FILE) as file:
 		data = csv.reader(file, delimiter=',')
-		active.fintech_data = [{'name': item[0], 'url': item[1], 'search': (item[2], int(item[3]), int(item[4]), int(item[5]), False if item[6] == "False" else True), 'image': item[7]} for item in data]
+		#active.fintech_data = [{'name': item[0], 'url': item[1], 'search': (item[2], int(item[3]), int(item[4]), int(item[5]), False if item[6] == "False" else True), 'image': item[7]} for item in data]
 		for item in data:
 			urls.append(item[1])
 			search.append((item[2], int(item[3]), int(item[4]), int(item[5]), False if item[6] == "False" else True))
@@ -176,5 +179,5 @@ def main():
 
 active = Basics()
 active.time_date = dt.now().strftime('%Y-%m-%d %H:%M:%S')
-#main()
+main()
 analysis()
