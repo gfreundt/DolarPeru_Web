@@ -105,8 +105,10 @@ def file_extract_recent(n):
 def analysis():
 	with open(active.ACTIVE_FILE, mode='r') as file:
 		data = [i for i in csv.reader(file, delimiter=',')]
-		fintechs = list(set([i[0] for i in data]))
-		datapoints = {unique: [float(i[1]) for i in data if i[0] == unique] for unique in fintechs}
+	fintechs = list(set([i[0] for i in data]))
+	datapoints = {unique: [float(i[1]) for i in data if i[0] == unique] for unique in fintechs}
+
+	# Update every time the code runs
 
 	# Add Average to Dataset
 	averagetc = round(mean([datapoints[f][-1] for f in fintechs if datapoints[f][-1] > 0]),4)
@@ -126,13 +128,9 @@ def analysis():
 		for i in sorted(datax, key=lambda x:x[2]):
 			w.writerow(i)
 
-
-def analysis2():
-
+	# Intraday Graph
 	with open(active.AVG_FILE, mode='r') as file:
 		data = [i for i in csv.reader(file, delimiter=',')]
-
-	# Intraday Graph
 	data_avg_today = [(float(i[0]), dt.strptime(i[1], '%Y-%m-%d %H:%M:%S')) for i in data if dt.strptime(i[1],'%Y-%m-%d %H:%M:%S').date() == dt.today().date()]
 	datetime_midnight = dt.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
 	x = [(i[1].timestamp()-datetime_midnight)/3600 for i in data_avg_today]
@@ -144,18 +142,31 @@ def analysis2():
 	yt = [i/1000 for i in range(int(axis[2]*1000), int(axis[3]*1000)+10, 10)]
 	graph(data_avg_today, x, y, xt, yt, axis=axis, filename='intraday.png')
 
-	# Last 5 days Graph
-	data_5days = [(float(i[0]), dt.strptime(i[1], '%Y-%m-%d %H:%M:%S')) for i in data if delta(days=1) <= dt.today().date() - dt.strptime(i[1],'%Y-%m-%d %H:%M:%S').date() <= delta(days=5)]
-	x = [(i[1].timestamp()-datetime_midnight)/3600/24 for i in data_5days]
-	y = [i[0] for i in data_5days]
-	mid_axis_y = round((max(y) + min(y))/2,2)
-	min_axis_y, max_axis_y = mid_axis_y - 0.05, mid_axis_y + 0.05
-	axis = (-5, 0, min_axis_y, max_axis_y)
-	days_week = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab']*2
-	xt = ([days_week[i+dt.today().weekday()+1] for i in range(-5,1)], [i for i in range(-5,1)])
-	yt = [i/1000 for i in range(int(axis[2]*1000), int(axis[3]*1000)+10, 10)]
-	graph(data_5days, x, y, xt, yt, axis=axis, filename='last5days.png')
+	# Update only on first run of the day
+	if dt.now().hour <= 7 and dt.now().minute < 15:
 
+		# Last 5 days Graph
+		data_5days = [(float(i[0]), dt.strptime(i[1], '%Y-%m-%d %H:%M:%S')) for i in data if delta(days=1) <= dt.today().date() - dt.strptime(i[1],'%Y-%m-%d %H:%M:%S').date() <= delta(days=5)]
+		x = [(i[1].timestamp()-datetime_midnight)/3600/24 for i in data_5days]
+		y = [i[0] for i in data_5days]
+		mid_axis_y = round((max(y) + min(y))/2,2)
+		min_axis_y, max_axis_y = mid_axis_y - 0.05, mid_axis_y + 0.05
+		axis = (-5, 0, min_axis_y, max_axis_y)
+		days_week = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab']*2
+		xt = ([days_week[i+dt.today().weekday()+1] for i in range(-5,1)], [i for i in range(-5,1)])
+		yt = [i/1000 for i in range(int(axis[2]*1000), int(axis[3]*1000)+10, 10)]
+		graph(data_5days, x, y, xt, yt, axis=axis, filename='last5days.png')
+
+		# Last 30 days Graph
+		data_30days = [(float(i[0]), dt.strptime(i[1], '%Y-%m-%d %H:%M:%S')) for i in data if delta(days=1) <= dt.today().date() - dt.strptime(i[1],'%Y-%m-%d %H:%M:%S').date() <= delta(days=30)]
+		x = [(i[1].timestamp()-datetime_midnight)/3600/24 for i in data_30days]
+		y = [i[0] for i in data_30days]
+		mid_axis_y = round((max(y) + min(y))/2,2)
+		min_axis_y, max_axis_y = mid_axis_y - 0.05, mid_axis_y + 0.05
+		axis = (-5, 0, min_axis_y, max_axis_y)
+		xt = ([i for i in range(-30,1,2)], [i for i in range(-30,1,2)])
+		yt = [i/1000 for i in range(int(axis[2]*1000), int(axis[3]*1000)+10, 10)]
+		graph(data_30days, x, y, xt, yt, axis=axis, filename='last30days.png')
 
 
 
@@ -192,11 +203,11 @@ def main():
 			get_source(url, options, params)
 		except:
 			pass
-	file_extract_recent(2500)
+	file_extract_recent(9800)
 	analysis()
 
 
 active = Basics()
 active.time_date = dt.now().strftime('%Y-%m-%d %H:%M:%S')
 #main()
-analysis2()
+analysis()
