@@ -125,9 +125,6 @@ def analysis():
 		data = [i for i in csv.reader(file, delimiter=',')]
 		fintechs = [i['url'] for i in active.fintechs]
 
-		print(data)
-		print([len(i) for i in data])
-
 	for quote, avg_filename, web_filename, graph_filename in zip([1,3], [active.AVG_VENTA_FILE, active.AVG_COMPRA_FILE], [active.WEB_VENTA_FILE, active.WEB_COMPRA_FILE], ['venta', 'compra']):
 		datapoints = {unique: [float(i[quote]) for i in data if i[0] == unique] for unique in fintechs}
 		# Update every time the code runs
