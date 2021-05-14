@@ -21,7 +21,7 @@ import threading
 class Basics:
 	def __init__(self):
 		base_path = self.find_path()
-		data_path = os.path.join('sharedData', 'data', 'test')
+		data_path = os.path.join('sharedData', 'data')
 		self.CHROMEDRIVER = os.path.join(base_path, 'chromedriver.exe')
 		self.GRAPH_PATH = os.path.join(base_path[:3], 'Webing', 'Static', 'Images')
 		self.GRAPH_PATH2 = os.path.join(base_path, data_path)
@@ -229,19 +229,13 @@ def main():
 
 	_ = [i.join() for i in all_threads]  # Ensures all threads end before moving forward
 
-	for i in active.results:
-		#if (not i['Compra']) or (not i['Venta']):
-			print("**",i)
-
 	save()
 	file_extract_recent(9800)
 	analysis()
 
 
 
-start = time.time()
 active = Basics()
 active.time_date = dt.now().strftime('%Y-%m-%d %H:%M:%S')
-#main()
-print(time.time()-start)
-analysis()
+main()
+#analysis()
