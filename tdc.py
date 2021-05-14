@@ -234,5 +234,5 @@ def main():
 
 active = Basics()
 active.time_date = dt.now().strftime('%Y-%m-%d %H:%M:%S')
-#main()
-analysis()
+main()
+#analysis()
