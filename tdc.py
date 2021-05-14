@@ -84,7 +84,8 @@ def get_source(fintech, options):
 				print(fintech['name'], 'retrying')
 				attempts += 1
 	driver.quit()
-	active.results.append({'url':fintech['url'], 'Compra': info[0], 'Venta': info[1]})
+	if info[0] != '':
+		active.results.append({'url':fintech['url'], 'Compra': info[0], 'Venta': info[1]})
 	
 
 def clean(text):
@@ -126,6 +127,7 @@ def analysis():
 		fintechs = [i['url'] for i in active.fintechs]
 
 	for quote, avg_filename, web_filename, graph_filename in zip([1,3], [active.AVG_VENTA_FILE, active.AVG_COMPRA_FILE], [active.WEB_VENTA_FILE, active.WEB_COMPRA_FILE], ['venta', 'compra']):
+		
 		datapoints = {unique: [float(i[quote]) for i in data if i[0] == unique] for unique in fintechs}
 		# Update every time the code runs
 
@@ -234,5 +236,5 @@ def main():
 
 active = Basics()
 active.time_date = dt.now().strftime('%Y-%m-%d %H:%M:%S')
-main()
-#analysis()
+#main()
+analysis()
