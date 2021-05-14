@@ -7,31 +7,37 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as WebDriverOptions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
 import time
 import csv
 import os
 from statistics import mean
 import subprocess
+import json
+import threading
 
 
 class Basics:
 	def __init__(self):
 		base_path = self.find_path()
-		if not base_path:
-			print("PATH NOT FOUND")
-			quit()
-		data_path = os.path.join('sharedData', 'data')
+		data_path = os.path.join('sharedData', 'data', 'test')
 		self.CHROMEDRIVER = os.path.join(base_path, 'chromedriver.exe')
 		self.GRAPH_PATH = os.path.join(base_path[:3], 'Webing', 'Static', 'Images')
-		self.FINTECHS_FILE = os.path.join(base_path, data_path, 'fintechs.txt')
+		self.GRAPH_PATH2 = os.path.join(base_path, data_path)
+		self.FINTECHS_FILE = os.path.join(base_path, data_path, 'fintechs.json')
 		self.VAULT_FILE = os.path.join(base_path, data_path,'TDC_vault.txt')
 		self.ACTIVE_FILE = os.path.join(base_path, data_path,'TDC.txt')
-		self.FIXED_FILE = os.path.join(base_path, data_path,'TDC_fixed.txt')
-		self.AVG_FILE = os.path.join(base_path, data_path,'TDC_average.txt')
+		self.WEB_VENTA_FILE = os.path.join(base_path, data_path,'WEB_Venta.txt')
+		self.WEB_COMPRA_FILE = os.path.join(base_path, data_path,'WEB_Compra.txt')
+		self.AVG_VENTA_FILE = os.path.join(base_path, data_path,'AVG_Venta.txt')
+		self.AVG_COMPRA_FILE = os.path.join(base_path, data_path,'AVG_Compra.txt')
 
-		with open(self.FINTECHS_FILE) as file:
-			data = csv.reader(file, delimiter=',')
-			self.fintech_data = [{'name': item[0], 'url': item[1], 'search': (item[2], int(item[3]), int(item[4]), int(item[5]), False if item[6] == "False" else True), 'image': item[7]} for item in data]
+		self.time_date = dt.now().strftime('%Y-%m-%d %H:%M:%S')
+		self.results = []
+
+		with open(self.FINTECHS_FILE, 'r', encoding='utf-8') as file:
+			self.fintechs = json.load(file)['fintechs']
 
 	def find_path(self):
 	    paths = (r'C:\Users\Gabriel Freundt\Google Drive\Multi-Sync',r'D:\Google Drive Backup\Multi-Sync', r'C:\users\gfreu\Google Drive\Multi-Sync', '/home/pi/webing')
@@ -53,20 +59,32 @@ def set_options():
 	return options
 
 
-def get_source(url, options, params):
-	print(url)
-	if params[4]:
-		raw = subprocess.check_output(['chrome.exe', '--headless', '--enable-logging', '--disable-gpu', '--dump-dom', url, '--virtual-time-budget=10000']).decode('utf-8')
-	else:
-		driver = webdriver.Chrome(active.CHROMEDRIVER, options=options)
-		driver.get(url)
-		element = WebDriverWait(driver, 10)
-		time.sleep(1)
-		raw = driver.page_source
-		driver.quit()
-	tdc = extract(raw, params)
-	if tdc:
-		save(url, tdc)
+def get_source(fintech, options):
+	driver = webdriver.Chrome(active.CHROMEDRIVER, options=options)
+	attempts = 1
+	while attempts <= 3:
+		try:
+			driver.get(fintech['url'])
+			break
+		except:
+			attempts += 1
+			time.sleep(3)
+	info, attempts = [], 1
+	for quote in ['compra', 'venta']:
+		if fintech[quote]['click']:
+			driver.find_element_by_xpath(fintech[quote]['click_xpath']).click()
+		element_present = EC.visibility_of_element_located((By.XPATH, fintech[quote]['xpath']))
+		while attempts <= 3:
+			try:
+				WebDriverWait(driver, 10).until(element_present)
+				time.sleep(fintech['sleep'])
+				info.append(extract(driver.find_element_by_xpath(fintech[quote]['xpath']).text, fintech[quote]))
+				break
+			except:
+				print(fintech['name'], 'retrying')
+				attempts += 1
+	driver.quit()
+	active.results.append({'url':fintech['url'], 'Compra': info[0], 'Venta': info[1]})
 	
 
 def clean(text):
@@ -79,18 +97,17 @@ def clean(text):
 	return r
 
 
-def extract(source, params):
+def extract(source, fintech):
 	init = 0
-	for i in range(params[1]):
-		init = source.find(params[0], init+1)
-		text = source[init+params[2]:init+params[3]]
+	text = source[init+fintech['extract_start']:init+fintech['extract_end']]
 	return clean(text)
 
 
-def save(url, tdc):
+def save():
 	with open(active.VAULT_FILE, mode='a', encoding='utf-8', newline="\n") as file:
 		data = csv.writer(file, delimiter=',')
-		data.writerow([url, tdc, active.time_date])
+		for f in active.results:
+			data.writerow([f['url'], f['Venta'], active.time_date, f['Compra']])
 
 
 def file_extract_recent(n):
@@ -103,70 +120,76 @@ def file_extract_recent(n):
 
 
 def analysis():
+
 	with open(active.ACTIVE_FILE, mode='r') as file:
 		data = [i for i in csv.reader(file, delimiter=',')]
-	fintechs = list(set([i[0] for i in data]))
-	datapoints = {unique: [float(i[1]) for i in data if i[0] == unique] for unique in fintechs}
+		fintechs = [i['url'] for i in active.fintechs]
 
-	# Update every time the code runs
+		print(data)
+		print([len(i) for i in data])
 
-	# Add Average to Dataset
-	averagetc = round(mean([datapoints[f][-1] for f in fintechs if datapoints[f][-1] > 0]),4)
+	for quote, avg_filename, web_filename, graph_filename in zip([1,3], [active.AVG_VENTA_FILE, active.AVG_COMPRA_FILE], [active.WEB_VENTA_FILE, active.WEB_COMPRA_FILE], ['venta', 'compra']):
+		datapoints = {unique: [float(i[quote]) for i in data if i[0] == unique] for unique in fintechs}
+		# Update every time the code runs
 
-	# Append Text File with new Average
-	item = [f'{averagetc:.4f}', active.time_date]
-	with open(active.AVG_FILE, mode='a', newline='') as file:
-		csv.writer(file, delimiter=",").writerow(item)
+		# Add Average to Dataset
+		averagetc = round(mean([datapoints[f][-1] for f in fintechs if datapoints[f][-1] > 0]),4)
 
-	# Create Text File for Web 
-	datax = [([i['image'] for i in active.fintech_data if i['url'] == f][0], f, f'{datapoints[f][-1]:0<6}') for f in fintechs]
-	with open(active.FIXED_FILE, mode='w', newline='') as file:
-		w = csv.writer(file, delimiter=",")
-		# Append Average and Date
-		w.writerow([f'{averagetc:.4f}', data[-1][2][-8:], data[-1][2][:10]]) # tc, time, date
-		# Append latest from each fintech
-		for i in sorted(datax, key=lambda x:x[2]):
-			w.writerow(i)
+		# Append Text File with new Average
+		item = [f'{averagetc:.4f}', active.time_date]
+		with open(avg_filename, mode='a', newline='') as file:
+			csv.writer(file, delimiter=",").writerow(item)
 
-	# Intraday Graph
-	with open(active.AVG_FILE, mode='r') as file:
-		data = [i for i in csv.reader(file, delimiter=',')]
-	data_avg_today = [(float(i[0]), dt.strptime(i[1], '%Y-%m-%d %H:%M:%S')) for i in data if dt.strptime(i[1],'%Y-%m-%d %H:%M:%S').date() == dt.today().date()]
-	datetime_midnight = dt.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
-	x = [(i[1].timestamp()-datetime_midnight)/3600 for i in data_avg_today]
-	y = [i[0] for i in data_avg_today]
-	mid_axis_y = round((max(y) + min(y))/2,2)
-	min_axis_y, max_axis_y = mid_axis_y - 0.05, mid_axis_y + 0.05
-	axis = (int(x[0]), 22, min_axis_y, max_axis_y)
-	xt = (range(axis[0],axis[1]+1),range(axis[0],axis[1]+1))
-	yt = [i/1000 for i in range(int(axis[2]*1000), int(axis[3]*1000)+10, 10)]
-	graph(data_avg_today, x, y, xt, yt, axis=axis, filename='intraday.png')
+		# Create Text File for Web
+		datax = [([i['image'] for i in active.fintechs if i['url'] == f][0], f, f'{datapoints[f][-1]:0<6}') for f in fintechs]
+		with open(web_filename, mode='w', newline='') as file:
+			w = csv.writer(file, delimiter=",")
+			# Append Average and Date
+			w.writerow([f'{averagetc:.4f}', data[-1][2][-8:], data[-1][2][:10]]) # tc_venta, time, date
+			# Append latest from each fintech
+			for i in sorted(datax, key=lambda x:x[2]):
+				w.writerow(i)
 
-	# Update only on first run of the day
-	if dt.now().hour <= 7 and dt.now().minute < 15:
 
-		# Last 5 days Graph
-		data_5days = [(float(i[0]), dt.strptime(i[1], '%Y-%m-%d %H:%M:%S')) for i in data if delta(days=1) <= dt.today().date() - dt.strptime(i[1],'%Y-%m-%d %H:%M:%S').date() <= delta(days=5)]
-		x = [(i[1].timestamp()-datetime_midnight)/3600/24 for i in data_5days]
-		y = [i[0] for i in data_5days]
+		# Intraday Graph
+		with open(avg_filename, mode='r') as file:
+			datax = [i for i in csv.reader(file, delimiter=',')]
+		data_avg_today = [(float(i[0]), dt.strptime(i[1], '%Y-%m-%d %H:%M:%S')) for i in datax if dt.strptime(i[1],'%Y-%m-%d %H:%M:%S').date() == dt.today().date()]
+		datetime_midnight = dt.now().replace(hour=0, minute=0, second=0, microsecond=0).timestamp()
+		x = [(i[1].timestamp()-datetime_midnight)/3600 for i in data_avg_today]
+		y = [i[0] for i in data_avg_today]
 		mid_axis_y = round((max(y) + min(y))/2,2)
 		min_axis_y, max_axis_y = mid_axis_y - 0.05, mid_axis_y + 0.05
-		axis = (-5, 0, min_axis_y, max_axis_y)
-		days_week = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab']*2
-		xt = ([days_week[i+dt.today().weekday()+1] for i in range(-5,1)], [i for i in range(-5,1)])
+		axis = (int(x[0]), 22, min_axis_y, max_axis_y)
+		xt = (range(axis[0],axis[1]),range(axis[0],axis[1]))
 		yt = [i/1000 for i in range(int(axis[2]*1000), int(axis[3]*1000)+10, 10)]
-		graph(data_5days, x, y, xt, yt, axis=axis, filename='last5days.png')
+		graph(data_avg_today, x, y, xt, yt, axis=axis, filename=f'intraday-{graph_filename}.png')
 
-		# Last 30 days Graph
-		data_30days = [(float(i[0]), dt.strptime(i[1], '%Y-%m-%d %H:%M:%S')) for i in data if delta(days=1) <= dt.today().date() - dt.strptime(i[1],'%Y-%m-%d %H:%M:%S').date() <= delta(days=30)]
-		x = [(i[1].timestamp()-datetime_midnight)/3600/24 for i in data_30days]
-		y = [i[0] for i in data_30days]
-		mid_axis_y = round((max(y) + min(y))/2,2)
-		min_axis_y, max_axis_y = mid_axis_y - 0.05, mid_axis_y + 0.05
-		axis = (-5, 0, min_axis_y, max_axis_y)
-		xt = ([i for i in range(-30,1,2)], [i for i in range(-30,1,2)])
-		yt = [i/1000 for i in range(int(axis[2]*1000), int(axis[3]*1000)+10, 10)]
-		graph(data_30days, x, y, xt, yt, axis=axis, filename='last30days.png')
+		# Update only on first run of the day
+		if True: #dt.now().hour <= 7 and dt.now().minute < 15:
+
+			# Last 5 days Graph
+			data_5days = [(float(i[0]), dt.strptime(i[1], '%Y-%m-%d %H:%M:%S')) for i in datax if delta(days=1) <= dt.today().date() - dt.strptime(i[1],'%Y-%m-%d %H:%M:%S').date() <= delta(days=5)]
+			x = [(i[1].timestamp()-datetime_midnight)/3600/24 for i in data_5days]
+			y = [i[0] for i in data_5days]
+			mid_axis_y = round((max(y) + min(y))/2,2)
+			min_axis_y, max_axis_y = mid_axis_y - 0.05, mid_axis_y + 0.05
+			axis = (-5, 0, min_axis_y, max_axis_y)
+			days_week = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab']*2
+			xt = ([days_week[i+dt.today().weekday()+1] for i in range(-5,1)], [i for i in range(-5,1)])
+			yt = [i/1000 for i in range(int(axis[2]*1000), int(axis[3]*1000)+10, 10)]
+			graph(data_5days, x, y, xt, yt, axis=axis, filename=f'last5days-{graph_filename}.png')
+
+			# Last 30 days Graph
+			data_30days = [(float(i[0]), dt.strptime(i[1], '%Y-%m-%d %H:%M:%S')) for i in datax if delta(days=1) <= dt.today().date() - dt.strptime(i[1],'%Y-%m-%d %H:%M:%S').date() <= delta(days=30)]
+			x = [(i[1].timestamp()-datetime_midnight)/3600/24 for i in data_30days]
+			y = [i[0] for i in data_30days]
+			mid_axis_y = round((max(y) + min(y))/2,2)
+			min_axis_y, max_axis_y = mid_axis_y - 0.05, mid_axis_y + 0.05
+			axis = (-5, 0, min_axis_y, max_axis_y)
+			xt = ([i for i in range(-30,1,2)], [i for i in range(-30,1,2)])
+			yt = [i/1000 for i in range(int(axis[2]*1000), int(axis[3]*1000)+10, 10)]
+			graph(data_30days, x, y, xt, yt, axis=axis, filename=f'last30days-{graph_filename}.png')
 
 
 
@@ -186,28 +209,39 @@ def graph(data, x, y, xt, yt, axis, filename):
 	plt.yticks(yt, color='#606060', fontsize=8)
 	plt.grid(color='#DFD8DF')
 	plt.savefig(os.path.join(active.GRAPH_PATH, filename), pad_inches=0, bbox_inches = 'tight', transparent=True)
+	plt.savefig(os.path.join(active.GRAPH_PATH2, filename), pad_inches=0, bbox_inches = 'tight', transparent=True)
 	plt.close()
 
 
 def main():
 	options = set_options()
-	urls, search, images = [], [], []
-	with open(active.FINTECHS_FILE) as file:
-		data = csv.reader(file, delimiter=',')
-		#active.fintech_data = [{'name': item[0], 'url': item[1], 'search': (item[2], int(item[3]), int(item[4]), int(item[5]), False if item[6] == "False" else True), 'image': item[7]} for item in data]
-		for item in data:
-			urls.append(item[1])
-			search.append((item[2], int(item[3]), int(item[4]), int(item[5]), False if item[6] == "False" else True))
-	for url, params in zip(urls, search):
+	
+	all_threads = []
+	for fintech in active.fintechs:
+		new_thread = threading.Thread(target=get_source, args=(fintech, options))
+		all_threads.append(new_thread)
 		try:
-			get_source(url, options, params)
+			#if fintech['name'] == "Dollar House":
+				new_thread.start()
 		except:
-			pass
+			print('Errrrrrrror')
+
+
+	_ = [i.join() for i in all_threads]  # Ensures all threads end before moving forward
+
+	for i in active.results:
+		#if (not i['Compra']) or (not i['Venta']):
+			print("**",i)
+
+	save()
 	file_extract_recent(9800)
 	analysis()
 
 
+
+start = time.time()
 active = Basics()
 active.time_date = dt.now().strftime('%Y-%m-%d %H:%M:%S')
-main()
-#analysis()
+#main()
+print(time.time()-start)
+analysis()
