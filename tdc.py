@@ -184,7 +184,7 @@ def analysis():
 			x = [(i[1].timestamp()-datetime_midnight)/3600/24 for i in data_30days]
 			y = [i[0] for i in data_30days]
 			mid_axis_y = round((max(y) + min(y))/2,2)
-			min_axis_y, max_axis_y = mid_axis_y - 0.075, mid_axis_y + 0.075
+			min_axis_y, max_axis_y = mid_axis_y - 0.1, mid_axis_y + 0.1
 			axis = (-5, 0, min_axis_y, max_axis_y)
 			xt = ([i for i in range(-30,1,2)], [i for i in range(-30,1,2)])
 			yt = [i/1000 for i in range(int(axis[2]*1000), int(axis[3]*1000)+10, 15)]
