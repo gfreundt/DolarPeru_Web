@@ -130,13 +130,11 @@ def analysis():
 		
 		this_time = data[-1][2] # Loads latest quote datetime
 		datapoints = {i[0]: float(i[quote]) for i in data if i[2] == this_time and float(i[quote]) > 0}
-		print(datapoints)
 		# Update every time the code runs
 
 		# Add Average to Dataset
 		#averagetc = round(mean([datapoints[f][-1] for f in fintechs if datapoints[f][-1] > 0]),4)
 		averagetc = round(mean([datapoints[i] for i in datapoints.keys()]),4)
-		print(averagetc)
 
 		# Append Text File with new Average
 		item = [f'{averagetc:.4f}', active.time_date]
@@ -149,7 +147,6 @@ def analysis():
 			# Append Average and Date
 			dump = {'head': {'value':f'{averagetc:.4f}', 'time':data[-1][2][-8:], 'date':data[-1][2][:10]}} # tc_venta, time, date
 			# Append latest from each fintech
-			print(datax)
 			dump.update({'details': [i for i in sorted(datax, key=lambda x:x['value']) if i['value'] != '0.0000']})
 			json.dump(dump,json_file)
 
