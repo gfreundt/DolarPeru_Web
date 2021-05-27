@@ -21,7 +21,7 @@ import threading
 class Basics:
 	def __init__(self):
 		base_path = self.find_path()
-		data_path = os.path.join('sharedData', 'data', 'test')
+		data_path = os.path.join('sharedData', 'data')
 		self.CHROMEDRIVER = os.path.join(base_path, 'chromedriver.exe')
 		self.GRAPH_PATH = os.path.join(base_path[:3], 'Webing', 'Static', 'Images')
 		self.GRAPH_PATH2 = os.path.join(base_path, data_path)
