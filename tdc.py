@@ -21,15 +21,15 @@ import threading
 class Basics:
 	def __init__(self):
 		base_path = self.find_path()
-		data_path = os.path.join('sharedData', 'data')
+		data_path = os.path.join('sharedData', 'data', 'test')
 		self.CHROMEDRIVER = os.path.join(base_path, 'chromedriver.exe')
 		self.GRAPH_PATH = os.path.join(base_path[:3], 'Webing', 'Static', 'Images')
 		self.GRAPH_PATH2 = os.path.join(base_path, data_path)
 		self.FINTECHS_FILE = os.path.join(base_path, data_path, 'fintechs.json')
 		self.VAULT_FILE = os.path.join(base_path, data_path,'TDC_vault.txt')
 		self.ACTIVE_FILE = os.path.join(base_path, data_path,'TDC.txt')
-		self.WEB_VENTA_FILE = os.path.join(base_path, data_path,'WEB_Venta.txt')
-		self.WEB_COMPRA_FILE = os.path.join(base_path, data_path,'WEB_Compra.txt')
+		self.WEB_VENTA_FILE = os.path.join(base_path, data_path,'WEB_Venta.json')
+		self.WEB_COMPRA_FILE = os.path.join(base_path, data_path,'WEB_Compra.json')
 		self.AVG_VENTA_FILE = os.path.join(base_path, data_path,'AVG_Venta.txt')
 		self.AVG_COMPRA_FILE = os.path.join(base_path, data_path,'AVG_Compra.txt')
 
@@ -128,11 +128,15 @@ def analysis():
 
 	for quote, avg_filename, web_filename, graph_filename in zip([1,3], [active.AVG_VENTA_FILE, active.AVG_COMPRA_FILE], [active.WEB_VENTA_FILE, active.WEB_COMPRA_FILE], ['venta', 'compra']):
 		
-		datapoints = {unique: [float(i[quote]) for i in data if i[0] == unique] for unique in fintechs}
+		this_time = data[-1][2] # Loads latest quote datetime
+		datapoints = {i[0]: float(i[quote]) for i in data if i[2] == this_time and float(i[quote]) > 0}
+		print(datapoints)
 		# Update every time the code runs
 
 		# Add Average to Dataset
-		averagetc = round(mean([datapoints[f][-1] for f in fintechs if datapoints[f][-1] > 0]),4)
+		#averagetc = round(mean([datapoints[f][-1] for f in fintechs if datapoints[f][-1] > 0]),4)
+		averagetc = round(mean([datapoints[i] for i in datapoints.keys()]),4)
+		print(averagetc)
 
 		# Append Text File with new Average
 		item = [f'{averagetc:.4f}', active.time_date]
@@ -140,15 +144,14 @@ def analysis():
 			csv.writer(file, delimiter=",").writerow(item)
 
 		# Create Text File for Web
-		datax = [([i['image'] for i in active.fintechs if i['url'] == f][0], f, f'{datapoints[f][-1]:0<6}') for f in fintechs]
-		with open(web_filename, mode='w', newline='') as file:
-			w = csv.writer(file, delimiter=",")
+		datax = [{'image': [i['image'] for i in active.fintechs if i['url'] == f][0], 'name': f, 'value': f'{datapoints[f]:0<6}'} for f in datapoints.keys()]
+		with open(web_filename, mode='w', newline='') as json_file:
 			# Append Average and Date
-			w.writerow([f'{averagetc:.4f}', data[-1][2][-8:], data[-1][2][:10]]) # tc_venta, time, date
+			dump = {'head': {'value':f'{averagetc:.4f}', 'time':data[-1][2][-8:], 'date':data[-1][2][:10]}} # tc_venta, time, date
 			# Append latest from each fintech
-			for i in sorted(datax, key=lambda x:x[2]):
-				w.writerow(i)
-
+			print(datax)
+			dump.update({'details': [i for i in sorted(datax, key=lambda x:x['value']) if i['value'] != '0.0000']})
+			json.dump(dump,json_file)
 
 		# Intraday Graph
 		with open(avg_filename, mode='r') as file:
@@ -165,7 +168,7 @@ def analysis():
 		graph(data_avg_today, x, y, xt, yt, axis=axis, filename=f'intraday-{graph_filename}.png')
 
 		# Update only on first run of the day
-		if True: #dt.now().hour <= 7 and dt.now().minute < 15:
+		if dt.now().hour <= 7 and dt.now().minute < 15:
 
 			# Last 5 days Graph
 			data_5days = [(float(i[0]), dt.strptime(i[1], '%Y-%m-%d %H:%M:%S')) for i in datax if delta(days=1) <= dt.today().date() - dt.strptime(i[1],'%Y-%m-%d %H:%M:%S').date() <= delta(days=5)]
