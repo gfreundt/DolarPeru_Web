@@ -18,7 +18,7 @@ class Basics:
 		if "NOTEST" not in sys.argv:
 			data_path = os.path.join(data_path, 'test')
 		if "/home/pi" in data_path:
-			self.CHROMEDRIVER = '/home/pi/Coding/tdc/chromedriver'
+			self.CHROMEDRIVER = '/usr/bin/chromedriver'
 		else:
 			self.CHROMEDRIVER = os.path.join(data_path[:3], 'Coding', 'tdc', 'chromedriver.exe')
 		self.GRAPH_PATH = os.path.join(data_path[:3], 'Webing', 'Static', 'Images')
