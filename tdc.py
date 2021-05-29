@@ -152,7 +152,6 @@ def analysis():
 		graph(data_avg_today, x, y, xt, yt, axis=axis, filename=f'intraday-{graph_filename}.png')
 
 		# Update only on first run of the day
-		file_extract_recent(9800)
 		
 		if dt.now().hour <= 7 and dt.now().minute < 15:
 
@@ -216,6 +215,7 @@ def main():
 	_ = [i.join() for i in all_threads]  # Ensures all threads end before moving forward
 
 	save()
+	file_extract_recent(9800)
 	analysis()
 
 
