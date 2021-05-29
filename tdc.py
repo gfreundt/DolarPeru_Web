@@ -19,7 +19,7 @@ class Basics:
 			data_path = os.path.join(data_path, 'test')
 		if "/home/pi" in data_path:
 			self.CHROMEDRIVER = '/usr/bin/chromedriver'
-			self.GRAPH_PATH = os.path.join('/home', 'pi', 'Webing', 'Static', 'Images')
+			self.GRAPH_PATH = os.path.join('/home', 'pi', 'webing', 'static', 'images')
 		else:
 			self.CHROMEDRIVER = os.path.join(data_path[:3], 'Coding', 'tdc', 'chromedriver.exe')
 			self.GRAPH_PATH = os.path.join(data_path[:3], 'Webing', 'Static', 'Images')
