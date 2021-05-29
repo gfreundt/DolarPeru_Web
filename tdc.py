@@ -14,27 +14,27 @@ import threading
 
 class Basics:
 	def __init__(self):
-		base_path = self.find_path()
-		data_path = os.path.join('sharedData', 'data')
+		data_path = self.find_path()
 		if "NOTEST" not in sys.argv:
 			data_path = os.path.join(data_path, 'test')
-		self.CHROMEDRIVER = os.path.join(base_path, 'chromedriver.exe')
-		self.GRAPH_PATH = os.path.join(base_path[:3], 'Webing', 'Static', 'Images')
-		self.GRAPH_PATH2 = os.path.join(base_path, data_path)
-		self.FINTECHS_FILE = os.path.join(base_path, data_path, 'data_structure.json')
-		self.VAULT_FILE = os.path.join(base_path, data_path,'TDC_vault.txt')
-		self.ACTIVE_FILE = os.path.join(base_path, data_path,'TDC.txt')
-		self.WEB_VENTA_FILE = os.path.join(base_path, data_path,'WEB_Venta.json')
-		self.WEB_COMPRA_FILE = os.path.join(base_path, data_path,'WEB_Compra.json')
-		self.AVG_VENTA_FILE = os.path.join(base_path, data_path,'AVG_Venta.txt')
-		self.AVG_COMPRA_FILE = os.path.join(base_path, data_path,'AVG_Compra.txt')
+		self.CHROMEDRIVER = os.path.join(data_path, 'chromedriver.exe')
+		self.GRAPH_PATH = os.path.join(data_path[:3], 'Webing', 'Static', 'Images')
+		self.GRAPH_PATH2 = data_path[:]
+		self.FINTECHS_FILE = os.path.join(data_path, 'data_structure.json')
+		self.VAULT_FILE = os.path.join(data_path,'TDC_vault.txt')
+		self.ACTIVE_FILE = os.path.join(data_path,'TDC.txt')
+		self.WEB_VENTA_FILE = os.path.join(data_path,'WEB_Venta.json')
+		self.WEB_COMPRA_FILE = os.path.join(data_path,'WEB_Compra.json')
+		self.AVG_VENTA_FILE = os.path.join(data_path,'AVG_Venta.txt')
+		self.AVG_COMPRA_FILE = os.path.join(data_path,'AVG_Compra.txt')
 		self.time_date = dt.now().strftime('%Y-%m-%d %H:%M:%S')
 		self.results = []
 		with open(self.FINTECHS_FILE, 'r', encoding='utf-8') as file:
 			self.fintechs = json.load(file)['fintechs']
 
 	def find_path(self):
-	    paths = (r'C:\Users\Gabriel Freundt\Google Drive\Multi-Sync',r'D:\Google Drive Backup\Multi-Sync', r'C:\users\gfreu\Google Drive\Multi-Sync', '/home/pi/webing')
+	    paths = (r'C:\Users\Gabriel Freundt\Google Drive\Multi-Sync\sharedData\data',r'D:\Google Drive Backup\Multi-Sync\sharedData\data',
+	    		 r'C:\users\gfreu\Google Drive\Multi-Sync\sharedData\data', '/home/pi/webing/data')
 	    for path in paths:
 	        if os.path.exists(path):
 	            return path
