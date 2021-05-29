@@ -20,10 +20,11 @@ class Basics:
 		if "/home/pi" in data_path:
 			self.CHROMEDRIVER = '/usr/bin/chromedriver'
 			self.GRAPH_PATH = os.path.join('/home', 'pi', 'webing', 'static', 'images')
+			self.DATA_STRUCTURE_FILE = os.path.join('/home', 'pi', 'Coding', 'tdc', 'data_structure.json')
 		else:
 			self.CHROMEDRIVER = os.path.join(data_path[:3], 'Coding', 'tdc', 'chromedriver.exe')
 			self.GRAPH_PATH = os.path.join(data_path[:3], 'Webing', 'Static', 'Images')
-		self.FINTECHS_FILE = os.path.join(data_path, 'data_structure.json')
+			self.DATA_STRUCTURE_FILE = os.path.join(data_path[:3], 'Coding', 'tdc', 'data_structure.json')
 		self.VAULT_FILE = os.path.join(data_path,'TDC_vault.txt')
 		self.ACTIVE_FILE = os.path.join(data_path,'TDC.txt')
 		self.WEB_VENTA_FILE = os.path.join(data_path,'WEB_Venta.json')
@@ -32,7 +33,7 @@ class Basics:
 		self.AVG_COMPRA_FILE = os.path.join(data_path,'AVG_Compra.txt')
 		self.time_date = dt.now().strftime('%Y-%m-%d %H:%M:%S')
 		self.results = []
-		with open(self.FINTECHS_FILE, 'r', encoding='utf-8') as file:
+		with open(self.DATA_STRUCTURE_FILE, 'r', encoding='utf-8') as file:
 			self.fintechs = json.load(file)['fintechs']
 
 	def find_path(self):
