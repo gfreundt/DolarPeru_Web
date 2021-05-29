@@ -17,7 +17,10 @@ class Basics:
 		data_path = self.find_path()
 		if "NOTEST" not in sys.argv:
 			data_path = os.path.join(data_path, 'test')
-		self.CHROMEDRIVER = os.path.join(data_path, 'chromedriver.exe')
+		if "/home/pi" in data_path:
+			self.CHROMEDRIVER = os.path.join(data_path, 'chromedriver')
+		else:
+			self.CHROMEDRIVER = os.path.join(data_path, 'chromedriver.exe')
 		self.GRAPH_PATH = os.path.join(data_path[:3], 'Webing', 'Static', 'Images')
 		self.GRAPH_PATH2 = data_path[:]
 		self.FINTECHS_FILE = os.path.join(data_path, 'data_structure.json')
