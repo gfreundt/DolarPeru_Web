@@ -18,9 +18,9 @@ class Basics:
 		if "NOTEST" not in sys.argv:
 			data_path = os.path.join(data_path, 'test')
 		if "/home/pi" in data_path:
-			self.CHROMEDRIVER = os.path.join(data_path, 'chromedriver')
+			self.CHROMEDRIVER = 'chromedriver'
 		else:
-			self.CHROMEDRIVER = os.path.join(data_path, 'chromedriver.exe')
+			self.CHROMEDRIVER = 'chromedriver.exe'
 		self.GRAPH_PATH = os.path.join(data_path[:3], 'Webing', 'Static', 'Images')
 		self.GRAPH_PATH2 = data_path[:]
 		self.FINTECHS_FILE = os.path.join(data_path, 'data_structure.json')
@@ -57,7 +57,7 @@ def set_options():
 
 
 def get_source(fintech, options):
-	driver = webdriver.Chrome(active.CHROMEDRIVER, options=options)
+	driver = webdriver.Chrome(os.path.join(os.getcwd(),active.CHROMEDRIVER), options=options)
 	attempts = 1
 	while attempts <= 3:
 		try:
