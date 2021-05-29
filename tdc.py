@@ -23,7 +23,6 @@ class Basics:
 		else:
 			self.CHROMEDRIVER = os.path.join(data_path[:3], 'Coding', 'tdc', 'chromedriver.exe')
 			self.GRAPH_PATH = os.path.join(data_path[:3], 'Webing', 'Static', 'Images')
-		self.GRAPH_PATH2 = data_path[:]
 		self.FINTECHS_FILE = os.path.join(data_path, 'data_structure.json')
 		self.VAULT_FILE = os.path.join(data_path,'TDC_vault.txt')
 		self.ACTIVE_FILE = os.path.join(data_path,'TDC.txt')
@@ -200,7 +199,6 @@ def graph(data, x, y, xt, yt, axis, filename):
 	plt.yticks(yt, color='#606060', fontsize=8)
 	plt.grid(color='#DFD8DF')
 	plt.savefig(os.path.join(active.GRAPH_PATH, filename), pad_inches=0, bbox_inches = 'tight', transparent=True)
-	plt.savefig(os.path.join(active.GRAPH_PATH2, filename), pad_inches=0, bbox_inches = 'tight', transparent=True)
 	plt.close()
 
 
