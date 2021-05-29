@@ -19,9 +19,10 @@ class Basics:
 			data_path = os.path.join(data_path, 'test')
 		if "/home/pi" in data_path:
 			self.CHROMEDRIVER = '/usr/bin/chromedriver'
+			self.GRAPH_PATH = os.path.join('/home', 'pi', 'Webing', 'Static', 'Images')
 		else:
 			self.CHROMEDRIVER = os.path.join(data_path[:3], 'Coding', 'tdc', 'chromedriver.exe')
-		self.GRAPH_PATH = os.path.join(data_path[:3], 'Webing', 'Static', 'Images')
+			self.GRAPH_PATH = os.path.join(data_path[:3], 'Webing', 'Static', 'Images')
 		self.GRAPH_PATH2 = data_path[:]
 		self.FINTECHS_FILE = os.path.join(data_path, 'data_structure.json')
 		self.VAULT_FILE = os.path.join(data_path,'TDC_vault.txt')
