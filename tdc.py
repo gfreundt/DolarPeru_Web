@@ -1,20 +1,14 @@
+import os, sys, csv, json, time
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from datetime import datetime as dt
-from datetime import date as date
-from datetime import timedelta as delta
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as WebDriverOptions
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-import time
-import csv
-import os
 from statistics import mean
-import subprocess
-import json
 import threading
 
 
@@ -22,20 +16,20 @@ class Basics:
 	def __init__(self):
 		base_path = self.find_path()
 		data_path = os.path.join('sharedData', 'data')
+		if "NOTEST" not in sys.argv:
+			data_path = os.path.join(data_path, 'test')
 		self.CHROMEDRIVER = os.path.join(base_path, 'chromedriver.exe')
 		self.GRAPH_PATH = os.path.join(base_path[:3], 'Webing', 'Static', 'Images')
 		self.GRAPH_PATH2 = os.path.join(base_path, data_path)
-		self.FINTECHS_FILE = os.path.join(base_path, data_path, 'fintechs.json')
+		self.FINTECHS_FILE = os.path.join(base_path, data_path, 'data_structure.json')
 		self.VAULT_FILE = os.path.join(base_path, data_path,'TDC_vault.txt')
 		self.ACTIVE_FILE = os.path.join(base_path, data_path,'TDC.txt')
 		self.WEB_VENTA_FILE = os.path.join(base_path, data_path,'WEB_Venta.json')
 		self.WEB_COMPRA_FILE = os.path.join(base_path, data_path,'WEB_Compra.json')
 		self.AVG_VENTA_FILE = os.path.join(base_path, data_path,'AVG_Venta.txt')
 		self.AVG_COMPRA_FILE = os.path.join(base_path, data_path,'AVG_Compra.txt')
-
 		self.time_date = dt.now().strftime('%Y-%m-%d %H:%M:%S')
 		self.results = []
-
 		with open(self.FINTECHS_FILE, 'r', encoding='utf-8') as file:
 			self.fintechs = json.load(file)['fintechs']
 
@@ -84,7 +78,7 @@ def get_source(fintech, options):
 				print(fintech['name'], 'retrying')
 				attempts += 1
 	driver.quit()
-	if info[0] != '':
+	if info and info[0] != '':
 		active.results.append({'url':fintech['url'], 'Compra': info[0], 'Venta': info[1]})
 	
 
@@ -121,26 +115,20 @@ def file_extract_recent(n):
 
 
 def analysis():
-
 	with open(active.ACTIVE_FILE, mode='r') as file:
 		data = [i for i in csv.reader(file, delimiter=',')]
 		fintechs = [i['url'] for i in active.fintechs]
-
 	for quote, avg_filename, web_filename, graph_filename in zip([1,3], [active.AVG_VENTA_FILE, active.AVG_COMPRA_FILE], [active.WEB_VENTA_FILE, active.WEB_COMPRA_FILE], ['venta', 'compra']):
-		
 		this_time = data[-1][2] # Loads latest quote datetime
 		datapoints = {i[0]: float(i[quote]) for i in data if i[2] == this_time and float(i[quote]) > 0}
 		# Update every time the code runs
 
 		# Add Average to Dataset
-		#averagetc = round(mean([datapoints[f][-1] for f in fintechs if datapoints[f][-1] > 0]),4)
 		averagetc = round(mean([datapoints[i] for i in datapoints.keys()]),4)
-
 		# Append Text File with new Average
 		item = [f'{averagetc:.4f}', active.time_date]
 		with open(avg_filename, mode='a', newline='') as file:
 			csv.writer(file, delimiter=",").writerow(item)
-
 		# Create Text File for Web
 		datax = [{'image': [i['image'] for i in active.fintechs if i['url'] == f][0], 'name': f, 'value': f'{datapoints[f]:0<6}'} for f in datapoints.keys()]
 		with open(web_filename, mode='w', newline='') as json_file:
@@ -149,7 +137,6 @@ def analysis():
 			# Append latest from each fintech
 			dump.update({'details': [i for i in sorted(datax, key=lambda x:x['value']) if i['value'] != '0.0000']})
 			json.dump(dump,json_file)
-
 		# Intraday Graph
 		with open(avg_filename, mode='r') as file:
 			datax = [i for i in csv.reader(file, delimiter=',')]
@@ -165,6 +152,8 @@ def analysis():
 		graph(data_avg_today, x, y, xt, yt, axis=axis, filename=f'intraday-{graph_filename}.png')
 
 		# Update only on first run of the day
+		file_extract_recent(9800)
+		
 		if dt.now().hour <= 7 and dt.now().minute < 15:
 
 			# Last 5 days Graph
@@ -176,7 +165,7 @@ def analysis():
 			axis = (-5, 0, min_axis_y, max_axis_y)
 			days_week = ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab']*2
 			xt = ([days_week[i+dt.today().weekday()+1] for i in range(-5,1)], [i for i in range(-5,1)])
-			yt = [i/1000 for i in range(int(axis[2]*1000), int(axis[3]*1000)+10, 15)]
+			yt = [round(i/1000,2) for i in range(int(axis[2]*1000), int(axis[3]*1000)+10, 10)]
 			graph(data_5days, x, y, xt, yt, axis=axis, filename=f'last5days-{graph_filename}.png')
 
 			# Last 30 days Graph
@@ -187,7 +176,7 @@ def analysis():
 			min_axis_y, max_axis_y = mid_axis_y - 0.1, mid_axis_y + 0.1
 			axis = (-5, 0, min_axis_y, max_axis_y)
 			xt = ([i for i in range(-30,1,2)], [i for i in range(-30,1,2)])
-			yt = [i/1000 for i in range(int(axis[2]*1000), int(axis[3]*1000)+10, 15)]
+			yt = [round(i/1000,2) for i in range(int(axis[2]*1000), int(axis[3]*1000)+10, 20)]
 			graph(data_30days, x, y, xt, yt, axis=axis, filename=f'last30days-{graph_filename}.png')
 
 
@@ -220,21 +209,17 @@ def main():
 		new_thread = threading.Thread(target=get_source, args=(fintech, options))
 		all_threads.append(new_thread)
 		try:
-			#if fintech['name'] == "Dollar House":
-				new_thread.start()
+			new_thread.start()
 		except:
-			print('Errrrrrrror')
-
+			pass
 
 	_ = [i.join() for i in all_threads]  # Ensures all threads end before moving forward
 
 	save()
-	file_extract_recent(9800)
 	analysis()
 
 
 
 active = Basics()
-active.time_date = dt.now().strftime('%Y-%m-%d %H:%M:%S')
 main()
 #analysis()
