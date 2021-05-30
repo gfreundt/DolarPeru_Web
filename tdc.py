@@ -34,6 +34,7 @@ class Basics:
 			self.DATA_STRUCTURE_FILE = os.path.join(data_path[:3], 'Coding', 'tdc', 'data_structure.json')
 			self.PYTESSERACT_PATH = os.path.join(data_path[:3], 'Program Files (x86)', 'Tesseract-OCR', 'tesseract.exe')
 		self.SCREENSHOT_FILE = os.path.join(data_path, 'screenshot.png')
+		self.LAST_USE_FILE = os.path.join(data_path, 'last_use.txt')
 		self.VAULT_FILE = os.path.join(data_path,'TDC_vault.txt')
 		self.ACTIVE_FILE = os.path.join(data_path,'TDC.txt')
 		self.WEB_VENTA_FILE = os.path.join(data_path,'WEB_Venta.json')
@@ -94,7 +95,7 @@ def get_source(fintech, options):
 				success = False
 				attempts += 1
 		if not success and 'ocr' in fintech:
-			ocr_result = get_source_ocr(fintech['ocr'][quote], driver).strip()
+			ocr_result = clean(get_source_ocr(fintech['ocr'][quote], driver).strip())
 			print('ocr result:', ocr_result)
 			if ocr_result:
 				info.append(ocr_result)
@@ -104,14 +105,9 @@ def get_source(fintech, options):
 	
 
 def get_source_ocr(coords, driver):
-	# take screenshot
 	driver.save_screenshot(active.SCREENSHOT_FILE)
-
-	# crop image
 	x, y, width, height = coords
 	img = Image.open(active.SCREENSHOT_FILE).crop((x, y, width, height))
-
-	# ocr
 	pytesseract.pytesseract.tesseract_cmd = active.PYTESSERACT_PATH
 	return pytesseract.image_to_string(img, lang='eng')
 
@@ -231,6 +227,11 @@ def graph(data, x, y, xt, yt, axis, filename):
 	plt.close()
 
 
+def last_use():
+	with open(active.LAST_USE_FILE, 'w') as file:
+		file.writerow(active.time_date)
+
+
 def main():
 	options = set_options()
 	all_threads = []
@@ -248,6 +249,7 @@ def main():
 	save()
 	file_extract_recent(9800)
 	analysis()
+	last_use()
 
 
 
