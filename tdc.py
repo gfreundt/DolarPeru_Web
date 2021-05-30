@@ -1,7 +1,7 @@
 import os, sys, csv, json, time
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-from datetime import datetime as dt, timedelta as delta
+from datetime import datetime as dt
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options as WebDriverOptions
 from selenium.webdriver.support.ui import WebDriverWait
