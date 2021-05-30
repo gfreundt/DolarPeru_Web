@@ -318,17 +318,17 @@
             {
                 "compra":
                 [
-                    100,
-                    100,
-                    20,
-                    20
+                    658,
+                    296,
+                    711,
+                    313
                 ],
                 "venta":
                 [
-                    100,
-                    100,
-                    20,
-                    20
+                    813,
+                    296,
+                    865,
+                    314
                 ]
             },
             "image": "cambio_seguro.png"
@@ -716,6 +716,47 @@
                 "extract_end": 5
             },
             "image": "efectibit.svg"
+        },
+        {
+            "id": 27,
+            "online": true,
+            "name": "Dollar House",
+            "url": "https://dollarhouse.pe/",
+            "sleep": 3,
+            "compra":
+            {
+                "xpath": "/html/body/main/div/div/form/div[1]/div/p[1]/span",
+                "click": false,
+                "click_xpath": null,
+                "extract_start": 0,
+                "extract_end": 6
+            },
+            "venta":
+            {
+                "xpath": "/html/body/main/div/div/form/div[1]/div/p[2]/span",
+                "click": false,
+                "click_xpath": null,
+                "extract_start": 0,
+                "extract_end": 6
+            },
+            "ocr":
+            {
+                "compra":
+                [
+                    863,
+                    86,
+                    969,
+                    118
+                ],
+                "venta":
+                [
+                    1137,
+                    86,
+                    1243,
+                    118
+                ]
+            },
+            "image": "dollar_house.png"
         }
     ]
 }

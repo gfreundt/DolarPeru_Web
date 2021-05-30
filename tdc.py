@@ -19,8 +19,9 @@ from PIL import Image
 
 class Basics:
 	def __init__(self):
+		self.switches = [i.upper() for i in sys.argv]
 		data_path = self.find_path()
-		if "NOTEST" not in sys.argv:
+		if "NOTEST" not in self.switches:
 			data_path = os.path.join(data_path, 'test')
 		if "/home/pi" in data_path:
 			self.CHROMEDRIVER = '/usr/bin/chromedriver'
@@ -54,7 +55,7 @@ class Basics:
 
 def set_options():
 	options = WebDriverOptions()
-	options.add_argument("--window-size=2736,1824")
+	options.add_argument("--window-size=1440,810")
 	options.add_argument("--headless")
 	options.add_argument("--disable-gpu")
 	options.add_argument("--silent")
@@ -93,10 +94,10 @@ def get_source(fintech, options):
 				success = False
 				attempts += 1
 		if not success and 'ocr' in fintech:
-			ocr_result = get_source_ocr(fintech['ocr'][quote], driver)
+			ocr_result = get_source_ocr(fintech['ocr'][quote], driver).strip()
+			print('ocr result:', ocr_result)
 			if ocr_result:
 				info.append(ocr_result)
-				print('ocr result:', ocr_result)
 	driver.quit()
 	if info and info[0] != '':
 		active.results.append({'url':fintech['url'], 'Compra': info[0], 'Venta': info[1]})
@@ -104,11 +105,11 @@ def get_source(fintech, options):
 
 def get_source_ocr(coords, driver):
 	# take screenshot
-	driver.save_screenshot(active.SCREENSHOT_FILE);
+	driver.save_screenshot(active.SCREENSHOT_FILE)
 
 	# crop image
 	x, y, width, height = coords
-	img = Image.open(active.SCREENSHOT_FILE).crop((x, y, x+width, y+height))
+	img = Image.open(active.SCREENSHOT_FILE).crop((x, y, width, height))
 
 	# ocr
 	pytesseract.pytesseract.tesseract_cmd = active.PYTESSERACT_PATH
@@ -186,7 +187,7 @@ def analysis():
 
 		# Update only on first run of the day
 		
-		if (dt.now().hour <= 7 and dt.now().minute < 15) or "DAILY-NOW" in sys.argv.upper():
+		if (dt.now().hour <= 7 and dt.now().minute < 15) or "DAILY-NOW" in active.switches:
 			# Last 5 days Graph
 			data_5days = [(float(i[0]), dt.strptime(i[1], '%Y-%m-%d %H:%M:%S')) for i in datax if delta(days=1) <= dt.today().date() - dt.strptime(i[1],'%Y-%m-%d %H:%M:%S').date() <= delta(days=5)]
 			x = [(i[1].timestamp()-datetime_midnight)/3600/24 for i in data_5days]
