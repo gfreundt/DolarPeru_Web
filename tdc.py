@@ -157,7 +157,7 @@ def analysis():
 
 		# Update only on first run of the day
 		
-		if dt.now().hour <= 7 and dt.now().minute < 15:
+		if (dt.now().hour <= 7 and dt.now().minute < 15) or "ALLGRAPHS" in sys.argv:
 
 			# Last 5 days Graph
 			data_5days = [(float(i[0]), dt.strptime(i[1], '%Y-%m-%d %H:%M:%S')) for i in datax if delta(days=1) <= dt.today().date() - dt.strptime(i[1],'%Y-%m-%d %H:%M:%S').date() <= delta(days=5)]
