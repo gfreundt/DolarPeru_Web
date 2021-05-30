@@ -11,6 +11,9 @@ from selenium.webdriver.common.by import By
 from statistics import mean
 import threading
 
+import pytesseract
+from PIL import Image
+
 
 class Basics:
 	def __init__(self):
@@ -21,10 +24,13 @@ class Basics:
 			self.CHROMEDRIVER = '/usr/bin/chromedriver'
 			self.GRAPH_PATH = os.path.join('/home', 'pi', 'webing', 'static', 'images')
 			self.DATA_STRUCTURE_FILE = os.path.join('/home', 'pi', 'Coding', 'tdc', 'data_structure.json')
+			self.PYTESSERACT_PATH = os.path.join('/home', 'pi', 'Coding', 'tdc', 'tesseract')
 		else:
 			self.CHROMEDRIVER = os.path.join(data_path[:3], 'Coding', 'tdc', 'chromedriver.exe')
 			self.GRAPH_PATH = os.path.join(data_path[:3], 'Webing', 'Static', 'Images')
 			self.DATA_STRUCTURE_FILE = os.path.join(data_path[:3], 'Coding', 'tdc', 'data_structure.json')
+			self.PYTESSERACT_PATH = os.path.join(data_path[:3], 'Program Files (x86)', 'Tesseract-OCR', 'tesseract.exe')
+		self.SCREENSHOT_FILE = os.path.join(data_path, 'screenshot.png')
 		self.VAULT_FILE = os.path.join(data_path,'TDC_vault.txt')
 		self.ACTIVE_FILE = os.path.join(data_path,'TDC.txt')
 		self.WEB_VENTA_FILE = os.path.join(data_path,'WEB_Venta.json')
@@ -46,7 +52,7 @@ class Basics:
 
 def set_options():
 	options = WebDriverOptions()
-	options.add_argument("--window-size=800,800")
+	options.add_argument("--window-size=2736,1824")
 	options.add_argument("--headless")
 	options.add_argument("--disable-gpu")
 	options.add_argument("--silent")
@@ -65,6 +71,7 @@ def get_source(fintech, options):
 			driver.get(fintech['url'])
 			break
 		except:
+			print("First Level Exception", fintech['name'])
 			attempts += 1
 			time.sleep(3)
 	info, attempts = [], 1
@@ -77,14 +84,34 @@ def get_source(fintech, options):
 				WebDriverWait(driver, 10).until(element_present)
 				time.sleep(fintech['sleep'])
 				info.append(extract(driver.find_element_by_xpath(fintech[quote]['xpath']).text, fintech[quote]))
+				success = True
 				break
 			except:
 				print(fintech['name'], 'retrying')
+				success = False
 				attempts += 1
+		if not success and 'ocr' in fintech:
+			ocr_result = get_source_ocr(fintech['ocr'][quote], driver)
+			if ocr_result:
+				info.append(ocr_result)
+				print('ocr result:', ocr_result)
 	driver.quit()
 	if info and info[0] != '':
 		active.results.append({'url':fintech['url'], 'Compra': info[0], 'Venta': info[1]})
 	
+
+def get_source_ocr(coords, driver):
+	# take screenshot
+	driver.save_screenshot(active.SCREENSHOT_FILE);
+
+	# crop image
+	x, y, width, height = coords
+	img = Image.open(active.SCREENSHOT_FILE).crop((x, y, x+width, y+height))
+
+	# ocr
+	pytesseract.pytesseract.tesseract_cmd = active.PYTESSERACT_PATH
+	return pytesseract.image_to_string(img, lang='eng')
+
 
 def clean(text):
 	r = ''
@@ -157,8 +184,7 @@ def analysis():
 
 		# Update only on first run of the day
 		
-		if (dt.now().hour <= 7 and dt.now().minute < 15) or "ALLGRAPHS" in sys.argv:
-
+		if dt.now().hour <= 7 and dt.now().minute < 15:
 			# Last 5 days Graph
 			data_5days = [(float(i[0]), dt.strptime(i[1], '%Y-%m-%d %H:%M:%S')) for i in datax if delta(days=1) <= dt.today().date() - dt.strptime(i[1],'%Y-%m-%d %H:%M:%S').date() <= delta(days=5)]
 			x = [(i[1].timestamp()-datetime_midnight)/3600/24 for i in data_5days]
@@ -170,7 +196,6 @@ def analysis():
 			xt = ([days_week[i+dt.today().weekday()+1] for i in range(-5,1)], [i for i in range(-5,1)])
 			yt = [round(i/1000,2) for i in range(int(axis[2]*1000), int(axis[3]*1000)+10, 10)]
 			graph(data_5days, x, y, xt, yt, axis=axis, filename=f'last5days-{graph_filename}.png')
-
 			# Last 30 days Graph
 			data_30days = [(float(i[0]), dt.strptime(i[1], '%Y-%m-%d %H:%M:%S')) for i in datax if delta(days=1) <= dt.today().date() - dt.strptime(i[1],'%Y-%m-%d %H:%M:%S').date() <= delta(days=30)]
 			x = [(i[1].timestamp()-datetime_midnight)/3600/24 for i in data_30days]
@@ -205,15 +230,15 @@ def graph(data, x, y, xt, yt, axis, filename):
 
 def main():
 	options = set_options()
-	
 	all_threads = []
 	for fintech in active.fintechs:
-		new_thread = threading.Thread(target=get_source, args=(fintech, options))
-		all_threads.append(new_thread)
-		try:
-			new_thread.start()
-		except:
-			pass
+		if fintech['online']:
+			new_thread = threading.Thread(target=get_source, args=(fintech, options))
+			all_threads.append(new_thread)
+			try:
+				new_thread.start()
+			except:
+				pass
 
 	_ = [i.join() for i in all_threads]  # Ensures all threads end before moving forward
 
