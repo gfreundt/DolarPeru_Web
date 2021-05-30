@@ -3,6 +3,7 @@
     [
         {
             "id": 1,
+            "online": true,
             "name": "SBS",
             "url": "https://www.sbs.gob.pe/",
             "sleep": 3,
@@ -26,6 +27,7 @@
         },
         {
             "id": 2,
+            "online": true,
             "name": "SUNAT",
             "url": "https://www.sunat.gob.pe/",
             "sleep": 3,
@@ -49,6 +51,7 @@
         },
         {
             "id": 3,
+            "online": true,
             "name": "BCRP",
             "url": "https://www.bcrp.gob.pe/",
             "sleep": 3,
@@ -75,6 +78,7 @@
     [
         {
             "id": 1,
+            "online": true,
             "name": "A Como",
             "url": "https://acomo.com.pe/",
             "sleep": 3,
@@ -98,6 +102,7 @@
         },
         {
             "id": 2,
+            "online": true,
             "name": "MidpointFX",
             "url": "https://www.midpointfx.com/",
             "sleep": 3,
@@ -121,6 +126,7 @@
         },
         {
             "id": 3,
+            "online": true,
             "name": "Billex",
             "url": "https://www.billex.pe/",
             "sleep": 3,
@@ -144,6 +150,7 @@
         },
         {
             "id": 4,
+            "online": true,
             "name": "TKambio",
             "url": "https://tkambio.com",
             "sleep": 3,
@@ -167,6 +174,7 @@
         },
         {
             "id": 5,
+            "online": true,
             "name": "Rextie",
             "url": "https://rextie.com",
             "sleep": 3,
@@ -190,6 +198,7 @@
         },
         {
             "id": 6,
+            "online": true,
             "name": "Kambista",
             "url": "https://kambista.com",
             "sleep": 3,
@@ -213,6 +222,7 @@
         },
         {
             "id": 7,
+            "online": true,
             "name": "Securex",
             "url": "https://securex.pe",
             "sleep": 3,
@@ -236,6 +246,7 @@
         },
         {
             "id": 8,
+            "online": true,
             "name": "Tu Cambista",
             "url": "https://tucambista.pe",
             "sleep": 3,
@@ -259,6 +270,7 @@
         },
         {
             "id": 9,
+            "online": true,
             "name": "Cocos y Lucas",
             "url": "https://cocosylucasbcp.com",
             "sleep": 3,
@@ -282,6 +294,7 @@
         },
         {
             "id": 10,
+            "online": true,
             "name": "Cambio Seguro",
             "url": "https://cambioseguro.com/",
             "sleep": 3,
@@ -301,10 +314,28 @@
                 "extract_start": 13,
                 "extract_end": 20
             },
+            "ocr":
+            {
+                "compra":
+                [
+                    100,
+                    100,
+                    20,
+                    20
+                ],
+                "venta":
+                [
+                    100,
+                    100,
+                    20,
+                    20
+                ]
+            },
             "image": "cambio_seguro.png"
         },
         {
             "id": 11,
+            "online": true,
             "name": "CambiaFX",
             "url": "https://cambiafx.pe/",
             "sleep": 3,
@@ -328,6 +359,7 @@
         },
         {
             "id": 12,
+            "online": true,
             "name": "Cambista Inka",
             "url": "https://www.cambistainka.com/",
             "sleep": 3,
@@ -351,6 +383,7 @@
         },
         {
             "id": 13,
+            "online": true,
             "name": "InstaKash",
             "url": "https://instakash.net/",
             "sleep": 3,
@@ -374,6 +407,7 @@
         },
         {
             "id": 14,
+            "online": true,
             "name": "Cambio Mundial",
             "url": "https://www.cambiomundial.com/",
             "sleep": 3,
@@ -397,7 +431,8 @@
         },
         {
             "id": 15,
-            "name": "Per\u00c3\u0192\u00c2\u00ba D\u00c3\u0192\u00c2\u00b3lar",
+            "online": false,
+            "name": "Peru Dolar",
             "url": "https://perudolar.pe/",
             "sleep": 3,
             "compra":
@@ -420,6 +455,7 @@
         },
         {
             "id": 16,
+            "online": true,
             "name": "TerraCash",
             "url": "https://terracash.pe/",
             "sleep": 3,
@@ -443,6 +479,7 @@
         },
         {
             "id": 17,
+            "online": true,
             "name": "Cambi.pe",
             "url": "http://cambi.pe/",
             "sleep": 3,
@@ -466,6 +503,7 @@
         },
         {
             "id": 18,
+            "online": true,
             "name": "Roblex",
             "url": "https://roblex.pe/",
             "sleep": 3,
@@ -489,6 +527,7 @@
         },
         {
             "id": 19,
+            "online": true,
             "name": "NonCash",
             "url": "https://noncash.pe",
             "sleep": 3,
@@ -512,6 +551,7 @@
         },
         {
             "id": 20,
+            "online": true,
             "name": "Cambix",
             "url": "https://cambix.com.pe/home",
             "sleep": 3,
@@ -535,6 +575,7 @@
         },
         {
             "id": 21,
+            "online": true,
             "name": "Western Union",
             "url": "https://www.westernunionperu.pe/cambiodemoneda",
             "sleep": 3,
@@ -558,6 +599,7 @@
         },
         {
             "id": 22,
+            "online": true,
             "name": "El Alfarero",
             "url": "https://www.casadecambioelalfarero.com/",
             "sleep": 3,
@@ -581,6 +623,7 @@
         },
         {
             "id": 23,
+            "online": true,
             "name": "CambioX",
             "url": "https://www.cambiox.pe/",
             "sleep": 3,
@@ -604,6 +647,7 @@
         },
         {
             "id": 24,
+            "online": true,
             "name": "Fintuu",
             "url": "https://www.fintuu.com/",
             "sleep": 3,
@@ -627,6 +671,7 @@
         },
         {
             "id": 25,
+            "online": true,
             "name": "Safex",
             "url": "https://www.safex.pe/",
             "sleep": 3,
@@ -650,6 +695,7 @@
         },
         {
             "id": 26,
+            "online": true,
             "name": "Efectibit",
             "url": "https://www.efectibit.com/",
             "sleep": 3,
