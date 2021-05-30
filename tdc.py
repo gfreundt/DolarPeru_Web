@@ -10,9 +10,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from statistics import mean
 import threading
-
 import pytesseract
 from PIL import Image
+
+# Switches:	NOTEST = work with production data
+#			DAILY-NOW = force once-a-day updates
 
 
 class Basics:
