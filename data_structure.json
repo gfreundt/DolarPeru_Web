@@ -788,17 +788,17 @@
             "name": "A$$e$$or",
             "url": "https://www.assessorperu.com/",
             "sleep": 3,
-            "venta":
+            "compra":
             {
-                "xpath": "/html/body/div/div[10]/section[1]/div/div[2]/div/div[1]/div/div/div[1]/div/div/h5/span",
+                "xpath": "/html/body/div/div[10]/section[1]/div/div[2]/div/div[1]/div/div/div[2]/div/div/h5/span",
                 "click": false,
                 "click_xpath": null,
                 "extract_start": 0,
                 "extract_end": 5
             },
-            "compra":
+            "venta":
             {
-                "xpath": "/html/body/div/div[10]/section[1]/div/div[2]/div/div[1]/div/div/div[2]/div/div/h5/span",
+                "xpath": "/html/body/div/div[10]/section[1]/div/div[2]/div/div[1]/div/div/div[1]/div/div/h5/span",
                 "click": true,
                 "click_xpath": "/html/body/div/div[10]/section[1]/div/div[2]/div/div[1]/div/ul[2]/li[2]/a",               "extract_start": 0,
                 "extract_end": 5
