@@ -229,7 +229,7 @@ def graph(data, x, y, xt, yt, axis, filename):
 
 def last_use():
 	with open(active.LAST_USE_FILE, 'w') as file:
-		file.writerow(active.time_date)
+		file.write(active.time_date)
 
 
 def main():
