@@ -314,7 +314,7 @@
                 "extract_start": 13,
                 "extract_end": 20
             },
-            "ocr":
+            "xocr":
             {
                 "compra":
                 [
@@ -739,7 +739,7 @@
                 "extract_start": 0,
                 "extract_end": 6
             },
-            "ocr":
+            "xocr":
             {
                 "compra":
                 [
@@ -757,6 +757,101 @@
                 ]
             },
             "image": "dollar_house.png"
+        },
+        {
+            "id": 28,
+            "online": true,
+            "name": "Cambista Online",
+            "url": "https://cambista.online/",
+            "sleep": 3,
+            "compra":
+            {
+                "xpath": "/html/body/div[1]/div[2]/div/div/div[2]/div/div[1]/div/div/div/div/div/div[5]/div/div/p/strong/span[1]",
+                "click": false,
+                "click_xpath": null,
+                "extract_start": 0,
+                "extract_end": 6
+            },
+            "venta":
+            {
+                "xpath": "/html/body/div[1]/div[2]/div/div/div[2]/div/div[1]/div/div/div/div/div/div[5]/div/div/p/strong/span[2]",
+                "click": false,
+                "click_xpath": null,
+                "extract_start": 0,
+                "extract_end": 6
+            },
+            "image": "cambista_online.png"
+        },
+        {
+            "id": 29,
+            "online": true,
+            "name": "A$$e$$or",
+            "url": "https://www.assessorperu.com/",
+            "sleep": 3,
+            "compra":
+            {
+                "xpath": "/html/body/div/div[10]/section[1]/div/div[2]/div/div[1]/div/div/div[1]/div/div/h5/span",
+                "click": false,
+                "click_xpath": null,
+                "extract_start": 0,
+                "extract_end": 5
+            },
+            "venta":
+            {
+                "xpath": "/html/body/div/div[10]/section[1]/div/div[2]/div/div[1]/div/div/div[2]/div/div/h5/span",
+                "click": true,
+0              "click_xpath": "/html/body/div/div[10]/section[1]/div/div[2]/div/div[1]/div/ul[2]/li[2]/a",               "extract_start": 0,
+                "extract_end": 5
+            },
+            "image": "a$$e$$or.png"
+        },
+        {
+            "id": 30,
+            "online": true,
+            "name": "X-Cambio",
+            "url": "https://x-cambio.com/",
+            "sleep": 3,
+            "compra":
+            {
+                "xpath": "/html/body/section[1]/div/div/div[2]/form/div[2]/div/div[1]/p[1]/strong/span",
+                "click": false,
+                "click_xpath": null,
+                "extract_start": 0,
+                "extract_end": 5
+            },
+            "venta":
+            {
+                "xpath": "/html/body/section[1]/div/div/div[2]/form/div[2]/div/div[1]/p[2]/strong/span",
+                "click": false,
+                "click_xpath": null,
+                "extract_start": 0,
+                "extract_end": 5
+            },
+            "image": "x-cambio.png"
+        },
+        {
+            "id": 31,
+            "online": true,
+            "name": "KeyEx",
+            "url": "https://www.keyex.pe/",
+            "sleep": 3,
+            "compra":
+            {
+                "xpath": "/html/body/header/div/div[1]/div[2]/div[2]/div/div[1]/div[1]/div[1]/span[2]",
+                "click": false,
+                "click_xpath": null,
+                "extract_start": 0,
+                "extract_end": 6
+            },
+            "venta":
+            {
+                "xpath": "/html/body/header/div/div[1]/div[2]/div[2]/div/div[1]/div[1]/div[2]/span[2]",
+                "click": false,
+                "click_xpath": null,
+                "extract_start": 0,
+                "extract_end": 6
+            },
+            "image": "keyex.png"
         }
     ]
 }
