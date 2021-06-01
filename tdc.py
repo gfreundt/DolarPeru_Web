@@ -35,7 +35,7 @@ class Basics:
 			self.PYTESSERACT_PATH = os.path.join(data_path[:3], 'Program Files (x86)', 'Tesseract-OCR', 'tesseract.exe')
 		self.SCREENSHOT_FILE = os.path.join(data_path, 'screenshot.png')
 		self.LAST_USE_FILE = os.path.join(data_path, 'last_use.txt')
-		self.VAULT_FILE = os.path.join(data_path,'TDC_vault.txt')
+		self.VAULT_FILE = os.path.join(data_path,'TDC_Vault.txt')
 		self.ACTIVE_FILE = os.path.join(data_path,'TDC.txt')
 		self.WEB_VENTA_FILE = os.path.join(data_path,'WEB_Venta.json')
 		self.WEB_COMPRA_FILE = os.path.join(data_path,'WEB_Compra.json')
