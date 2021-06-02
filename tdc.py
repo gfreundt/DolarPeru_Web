@@ -107,6 +107,7 @@ def get_source(fintech, options, k):
 		active.results.append({'url':fintech['url'], 'Compra': info[0], 'Venta': info[1]})
 		#print(k, "Added:", fintech['name'])
 	else:
+		pass
 		#print(k, "Skipped:", fintech['name'])
 
 
