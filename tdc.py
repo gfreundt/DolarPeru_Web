@@ -22,6 +22,9 @@ import requests
 
 class Basics:
 	def __init__(self):
+
+		self.good, self.bad = 0,0
+
 		self.switches = [i.upper() for i in sys.argv]
 		data_path = self.find_path()
 		if "NOTEST" not in self.switches:
@@ -105,10 +108,12 @@ def get_source(fintech, options, k):
 	driver.quit()
 	if info and info[0] != '' and sanity_check(info):
 		active.results.append({'url':fintech['url'], 'Compra': info[0], 'Venta': info[1]})
-		print(k, "Added:", fintech['name'])
+		#print(k, "Added:", fintech['name'])
+		active.good += 1
 	else:
 		pass
 		print(k, "Skipped:", fintech['name'])
+		active.bad += 1
 
 
 def sanity_check(test):
@@ -286,6 +291,7 @@ def main():
 		save()
 		file_extract_recent(9800)
 		last_use()
+		print("Good:", active.good, "\nBad:", active.bad, "\nCrashed:", 30-active.good-active.bad)
 	analysis()
 	
 
