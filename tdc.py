@@ -106,23 +106,19 @@ def get_source(fintech, options, k):
 			if ocr_result:
 				info.append(ocr_result)
 	driver.quit()
-	print("info",info)
 	if info and info[0] != '' and sanity_check(info):
 		active.results.append({'url':fintech['url'], 'Compra': info[0], 'Venta': info[1]})
-		print(k, "Added:", fintech['name'])
+		#print(k, "Added:", fintech['name'])
 		active.good += 1
 	else:
 		pass
-		print(k, "Skipped:", fintech['name'])
+		#print(k, "Skipped:", fintech['name'])
 		active.bad += 1
-	#mmm = input("Pausa")
 
 
 def sanity_check(test):
 	for i in test:
 		if float(i) < 3.30 or float(i) > 4.30:
-			print(i)
-			print('Sanity Check FAILED')
 			return False
 	return True
 		
@@ -156,7 +152,6 @@ def ocr(img, overlay=False, api_key='57bd56948488957', language='eng'):  # Space
 
 
 def clean(text):
-	print(text)
 	r = ''
 	for digit in text.strip():
 		if digit.isdigit() or digit == ".":
@@ -282,7 +277,7 @@ def main():
 		options = set_options()
 		all_threads = []
 		for k, fintech in enumerate(active.fintechs):
-			if fintech['online'] and fintech['id'] == 10:
+			if fintech['online']: # and fintech['id'] == 10:
 				new_thread = threading.Thread(target=get_source, args=(fintech, options, k))
 				all_threads.append(new_thread)
 				try:
