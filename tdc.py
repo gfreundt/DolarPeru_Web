@@ -290,8 +290,8 @@ def main():
 		save()
 		file_extract_recent(9800)
 		last_use()
-		analysis()
 		print("Good:", active.good, "\nBad:", active.bad)
+	analysis()
 	
 
 
