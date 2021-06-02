@@ -105,10 +105,10 @@ def get_source(fintech, options, k):
 	driver.quit()
 	if info and info[0] != '' and sanity_check(info):
 		active.results.append({'url':fintech['url'], 'Compra': info[0], 'Venta': info[1]})
-		#print(k, "Added:", fintech['name'])
+		print(k, "Added:", fintech['name'])
 	else:
 		pass
-		#print(k, "Skipped:", fintech['name'])
+		print(k, "Skipped:", fintech['name'])
 
 
 def sanity_check(test):
