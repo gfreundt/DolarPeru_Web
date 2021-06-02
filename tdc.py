@@ -70,10 +70,10 @@ def set_options():
 	return options
 
 
-def get_source(fintech, options):
+def get_source(fintech, options, k):
 	driver = webdriver.Chrome(os.path.join(os.getcwd(),active.CHROMEDRIVER), options=options)
 	attempts = 1
-	while attempts <= 2:
+	while attempts <= 1:
 		try:
 			driver.get(fintech['url'])
 			break
@@ -86,7 +86,7 @@ def get_source(fintech, options):
 		if fintech[quote]['click']:
 			driver.find_element_by_xpath(fintech[quote]['click_xpath']).click()
 		element_present = EC.visibility_of_element_located((By.XPATH, fintech[quote]['xpath']))
-		while attempts <= 2:
+		while attempts <= 1:
 			try:
 				WebDriverWait(driver, 10).until(element_present)
 				time.sleep(fintech['sleep'])
@@ -94,22 +94,26 @@ def get_source(fintech, options):
 				success = True
 				break
 			except:
-				print(fintech['name'], 'retrying')
+				#print(fintech['name'], 'retrying')
 				success = False
 				attempts += 1
 		if not success and 'ocr' in fintech:
 			ocr_result = clean(get_source_ocr(fintech['ocr'][quote], driver).strip())
-			print('ocr result:', ocr_result)
+			#print('ocr result:', ocr_result)
 			if ocr_result:
 				info.append(ocr_result)
 	driver.quit()
 	if info and info[0] != '' and sanity_check(info):
 		active.results.append({'url':fintech['url'], 'Compra': info[0], 'Venta': info[1]})
+		#print(k, "Added:", fintech['name'])
+	else:
+		#print(k, "Skipped:", fintech['name'])
 
 
 def sanity_check(test):
 	for i in test:
 		if float(i) < 3.30 or float(i) > 4.30:
+			#print('Sanity Check FAILED')
 			return False
 	return True
 		
@@ -231,7 +235,7 @@ def analysis():
 			x = [(i[1].timestamp()-datetime_midnight)/3600/24 for i in data_30days]
 			y = [i[0] for i in data_30days]
 			mid_axis_y = round((max(y) + min(y))/2,2)
-			min_axis_y, max_axis_y = mid_axis_y - 0.1, mid_axis_y + 0.1
+			min_axis_y, max_axis_y = mid_axis_y - 0.2, mid_axis_y + 0.2
 			axis = (-5, 0, min_axis_y, max_axis_y)
 			xt = ([i for i in range(-30,1,2)], [i for i in range(-30,1,2)])
 			yt = [round(i/1000,2) for i in range(int(axis[2]*1000), int(axis[3]*1000)+10, 20)]
@@ -267,9 +271,9 @@ def main():
 	if "ANALYSIS" not in active.switches:
 		options = set_options()
 		all_threads = []
-		for fintech in active.fintechs:
+		for k, fintech in enumerate(active.fintechs):
 			if fintech['online']:
-				new_thread = threading.Thread(target=get_source, args=(fintech, options))
+				new_thread = threading.Thread(target=get_source, args=(fintech, options, k))
 				all_threads.append(new_thread)
 				try:
 					new_thread.start()
