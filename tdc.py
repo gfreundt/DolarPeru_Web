@@ -131,11 +131,13 @@ def get_source_ocr(coords, driver):
 	#return pytesseract.image_to_string(img, lang='eng')
 	return ocr(img)
 
-def ocr(img, overlay=False, api_key='57bd56948488957', language='eng'):  # Space OCR API
+def ocr(img, overlay=False, api_key='57bd56948488957', language='eng', scale=True):  # Space OCR API
     cv2.imwrite("temp.jpg", img)
     payload = {'isOverlayRequired': overlay,
                'apikey': api_key,
                'language': language,
+               'scale': scale,
+               'OCREngine': 2
                }
     with open("temp.jpg", 'rb') as f:
         r = requests.post('https://api.ocr.space/parse/image',
