@@ -103,9 +103,16 @@ def get_source(fintech, options):
 			if ocr_result:
 				info.append(ocr_result)
 	driver.quit()
-	if info and info[0] != '':
+	if info and info[0] != '' and sanity_check(info):
 		active.results.append({'url':fintech['url'], 'Compra': info[0], 'Venta': info[1]})
-	
+
+
+def sanity_check(test):
+	for i in test:
+		if float(i) < 3.30 or float(i) > 4.30:
+			return False
+	return True
+		
 
 def get_source_ocr(coords, driver):
 	driver.save_screenshot(active.SCREENSHOT_FILE)
