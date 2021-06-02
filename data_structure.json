@@ -314,7 +314,7 @@
                 "extract_start": 13,
                 "extract_end": 20
             },
-            "xocr":
+            "ocr":
             {
                 "compra":
                 [
@@ -739,7 +739,7 @@
                 "extract_start": 0,
                 "extract_end": 6
             },
-            "xocr":
+            "ocr":
             {
                 "compra":
                 [

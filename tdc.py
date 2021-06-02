@@ -11,10 +11,13 @@ from selenium.webdriver.common.by import By
 from statistics import mean
 import threading
 #import pytesseract
-from PIL import Image
+import cv2
+import requests
+
 
 # Switches:	NOTEST = work with production data
 #			DAILY-NOW = force once-a-day updates
+#			ANALYSIS = skip scraping and only perform data analysis
 
 
 class Basics:
@@ -70,20 +73,20 @@ def set_options():
 def get_source(fintech, options):
 	driver = webdriver.Chrome(os.path.join(os.getcwd(),active.CHROMEDRIVER), options=options)
 	attempts = 1
-	while attempts <= 3:
+	while attempts <= 2:
 		try:
 			driver.get(fintech['url'])
 			break
 		except:
 			print("First Level Exception", fintech['name'])
 			attempts += 1
-			time.sleep(3)
+			time.sleep(2)
 	info, attempts = [], 1
 	for quote in ['compra', 'venta']:
 		if fintech[quote]['click']:
 			driver.find_element_by_xpath(fintech[quote]['click_xpath']).click()
 		element_present = EC.visibility_of_element_located((By.XPATH, fintech[quote]['xpath']))
-		while attempts <= 3:
+		while attempts <= 2:
 			try:
 				WebDriverWait(driver, 10).until(element_present)
 				time.sleep(fintech['sleep'])
@@ -107,9 +110,29 @@ def get_source(fintech, options):
 def get_source_ocr(coords, driver):
 	driver.save_screenshot(active.SCREENSHOT_FILE)
 	x, y, width, height = coords
-	img = Image.open(active.SCREENSHOT_FILE).crop((x, y, width, height))
-	pytesseract.pytesseract.tesseract_cmd = active.PYTESSERACT_PATH
-	return pytesseract.image_to_string(img, lang='eng')
+	img = cv2.imread(active.SCREENSHOT_FILE, cv2.IMREAD_GRAYSCALE)[y:height, x:width]
+	#pytesseract.pytesseract.tesseract_cmd = active.PYTESSERACT_PATH
+	#return pytesseract.image_to_string(img, lang='eng')
+	return ocr(img)
+
+def ocr(img, overlay=False, api_key='57bd56948488957', language='eng'):  # Space OCR API
+    cv2.imwrite("temp.jpg", img)
+    payload = {'isOverlayRequired': overlay,
+               'apikey': api_key,
+               'language': language,
+               }
+    with open("temp.jpg", 'rb') as f:
+        r = requests.post('https://api.ocr.space/parse/image',
+                          files={"temp.jpg": f},
+                          data=payload,
+                          )
+    response = r.content.decode()
+    if "ParsedText" in response:
+        pos0 = response.index("ParsedText") + 13
+        pos1 = response.index('"', pos0)
+        return response[pos0:pos1 - 4]
+    else:
+        return "" 
 
 
 def clean(text):
@@ -234,23 +257,25 @@ def last_use():
 
 
 def main():
-	options = set_options()
-	all_threads = []
-	for fintech in active.fintechs:
-		if fintech['online']:
-			new_thread = threading.Thread(target=get_source, args=(fintech, options))
-			all_threads.append(new_thread)
-			try:
-				new_thread.start()
-			except:
-				pass
+	if "ANALYSIS" not in active.switches:
+		options = set_options()
+		all_threads = []
+		for fintech in active.fintechs:
+			if fintech['online']:
+				new_thread = threading.Thread(target=get_source, args=(fintech, options))
+				all_threads.append(new_thread)
+				try:
+					new_thread.start()
+				except:
+					pass
 
-	_ = [i.join() for i in all_threads]  # Ensures all threads end before moving forward
+		_ = [i.join() for i in all_threads]  # Ensures all threads end before moving forward
 
-	save()
-	file_extract_recent(9800)
+		save()
+		file_extract_recent(9800)
+		last_use()
 	analysis()
-	last_use()
+	
 
 
 
