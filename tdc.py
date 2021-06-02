@@ -151,6 +151,7 @@ def analysis():
 	for quote, avg_filename, web_filename, graph_filename in zip([1,3], [active.AVG_VENTA_FILE, active.AVG_COMPRA_FILE], [active.WEB_VENTA_FILE, active.WEB_COMPRA_FILE], ['venta', 'compra']):
 		this_time = data[-1][2] # Loads latest quote datetime
 		datapoints = {i[0]: float(i[quote]) for i in data if i[2] == this_time and float(i[quote]) > 0}
+		
 		# Update every time the code runs
 
 		# Add Average to Dataset
@@ -163,7 +164,7 @@ def analysis():
 		datax = [{'image': [i['image'] for i in active.fintechs if i['url'] == f][0], 'name': f, 'value': f'{datapoints[f]:0<6}'} for f in datapoints.keys()]
 		with open(web_filename, mode='w', newline='') as json_file:
 			# Append Average and Date
-			dump = {'head': {'value':f'{averagetc:.4f}', 'time':data[-1][2][-8:], 'date':data[-1][2][:10]}} # tc_venta, time, date
+			dump = {'head': {'value':f'{averagetc:.4f}', 'from': f'{len(datapoints.keys())}', 'time':data[-1][2][-8:], 'date':data[-1][2][:10]}} # tc, cantidad de fintechs, time, date
 			# Append latest from each fintech
 			dump.update({'details': [i for i in sorted(datax, key=lambda x:x['value']) if i['value'] != '0.0000']})
 			json.dump(dump,json_file)
@@ -254,5 +255,5 @@ def main():
 
 
 active = Basics()
-main()
-#analysis()
+#main()
+analysis()
