@@ -76,7 +76,7 @@ def set_options():
 def get_source(fintech, options, k):
 	driver = webdriver.Chrome(os.path.join(os.getcwd(),active.CHROMEDRIVER), options=options)
 	attempts = 1
-	while attempts <= 1:
+	while attempts <= 3:
 		try:
 			driver.get(fintech['url'])
 			break
@@ -137,7 +137,7 @@ def ocr(img, overlay=False, api_key='57bd56948488957', language='eng', scale=Tru
                'apikey': api_key,
                'language': language,
                'scale': scale,
-               'OCREngine': 2
+               'OCREngine': 1
                }
     with open("temp.jpg", 'rb') as f:
         r = requests.post('https://api.ocr.space/parse/image',
