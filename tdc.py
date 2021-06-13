@@ -64,7 +64,7 @@ class Basics:
 		for system in systems:
 			if system['name'] in platform.node():
 				return system['root_path']
-		return systems['all_others']['root_path']
+		return systems[-1]['root_path']
 
 
 
