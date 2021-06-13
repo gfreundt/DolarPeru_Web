@@ -26,47 +26,45 @@ class Basics:
 		self.good, self.bad = 0,0
 
 		self.switches = [i.upper() for i in sys.argv]
+		
+		sys_root_path = self.which_system()
+		sys_main_path = os.path.join(sys_root_path, 'tipoDeCambio')
+		sys_data_path = os.path.join(sys_main_path, 'data')
 		if "NOTEST" not in self.switches:
-			data_path = os.path.join(data_path, 'test')
-			
-		system_name, system_data_path = self.which_system()
-		if 'raspberrypi' in system_name:
-			self.CHROMEDRIVER = '/usr/bin/chromedriver'
-			self.GRAPH_PATH = os.path.join('/home', 'pi', 'webing', 'static', 'images')
-			self.DATA_STRUCTURE_FILE = os.path.join('/home', 'pi', 'Coding', 'tdc', 'data_structure.json')
-			#self.PYTESSERACT_PATH = os.path.join('/home', 'pi', 'Coding', 'tdc', 'tesseract')
-		elif 'POWER' or 'GFT-Tablet' in system_name:
-			self.CHROMEDRIVER = os.path.join(data_path[:3], 'Coding', 'tdc', 'chromedriver.exe')
-			self.GRAPH_PATH = os.path.join(data_path[:3], 'Webing', 'Static', 'Images')
-			self.DATA_STRUCTURE_FILE = os.path.join(data_path[:3], 'Coding', 'tdc', 'data_structure.json')
-			#self.PYTESSERACT_PATH = os.path.join(data_path[:3], 'Program Files (x86)', 'Tesseract-OCR', 'tesseract.exe')
-		else:
-			self.CHROMEDRIVER = os.path.join(data_path[:3], 'Coding', 'tdc', 'chromedriver.exe')
-			self.GRAPH_PATH = os.path.join(data_path[:3], 'Webing', 'Static', 'Images')
-			self.DATA_STRUCTURE_FILE = os.path.join(data_path[:3], 'Coding', 'tdc', 'data_structure.json')
+			sys_data_path = os.path.join(sys_data_path, 'test')
 
-		self.SCREENSHOT_FILE = os.path.join(data_path, 'screenshot.png')
-		self.LAST_USE_FILE = os.path.join(data_path, 'last_use.txt')
-		self.VAULT_FILE = os.path.join(data_path,'TDC_Vault.txt')
-		self.ACTIVE_FILE = os.path.join(data_path,'TDC.txt')
-		self.WEB_VENTA_FILE = os.path.join(data_path,'WEB_Venta.json')
-		self.WEB_COMPRA_FILE = os.path.join(data_path,'WEB_Compra.json')
-		self.AVG_VENTA_FILE = os.path.join(data_path,'AVG_Venta.txt')
-		self.AVG_COMPRA_FILE = os.path.join(data_path,'AVG_Compra.txt')
+		if 'Linux' in platform.system():
+			self.CHROMEDRIVER = os.path.join(sys_main_path, 'chromedriver')
+		elif 'Windows' in platform.system():
+			self.CHROMEDRIVER = os.path.join(sys_main_path, 'chromedriver.exe')
+		else:
+			print('Cannot Determine System Type')
+			quit()
+		
+		self.DATA_STRUCTURE_FILE = os.path.join(sys_main_path, 'static', 'data_structure.json')
+		self.GRAPH_PATH = os.path.join(sys_main_path, 'static', 'images')
+		self.SCREENSHOT_FILE = os.path.join(sys_data_path, 'screenshot.png')
+		self.LAST_USE_FILE = os.path.join(sys_data_path, 'last_use.txt')
+		self.VAULT_FILE = os.path.join(sys_data_path,'TDC_Vault.txt')
+		self.ACTIVE_FILE = os.path.join(sys_data_path,'TDC.txt')
+		self.WEB_VENTA_FILE = os.path.join(sys_data_path,'WEB_Venta.json')
+		self.WEB_COMPRA_FILE = os.path.join(sys_data_path,'WEB_Compra.json')
+		self.AVG_VENTA_FILE = os.path.join(sys_data_path,'AVG_Venta.txt')
+		self.AVG_COMPRA_FILE = os.path.join(sys_data_path,'AVG_Compra.txt')
 		self.time_date = dt.now().strftime('%Y-%m-%d %H:%M:%S')
 		self.results = []
 		with open(self.DATA_STRUCTURE_FILE, 'r', encoding='utf-8') as file:
 			self.fintechs = json.load(file)['fintechs']
 
 	def which_system(self):
-		systems = [{'name': 'GFT-Tablet', 'data_path': r'C:\users\gfreu\Google Drive\Multi-Sync\sharedData\data'},
-			 	   {'name': 'raspberrypi', 'data_path': r'/home/pi/webing/data'},
-				   {'name': 'POWER', 'data_path': r'C:\Users\Gabriel Freundt\Google Drive\Multi-Sync\sharedData\data'},
-				   {'name': 'all others', 'data_path': 'home/gfreundt/webapp/webing'}]
+		systems = [{'name': 'GFT-Tablet', 'root_path': r'C:\pythonCode'},
+			 	   {'name': 'raspberrypi', 'root_path': r'/home/pi/pythonCode'},
+				   {'name': 'POWER', 'root_path': r'D:\pythonCode'},
+				   {'name': 'all others', 'root_path': 'home/gfreundt/pythonCode'}]
 		for system in systems:
 			if system['name'] in platform.node():
-				return system['name'], system['data_path']
-		return systems['all others']['name'], systems['all_others']['data_path']
+				return system['root_path']
+		return systems['all_others']['root_path']
 
 
 
