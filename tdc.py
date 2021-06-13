@@ -11,7 +11,7 @@ from selenium.webdriver.common.by import By
 from statistics import mean
 import threading
 #import pytesseract
-import cv2
+#import cv2
 import requests
 
 
@@ -110,7 +110,7 @@ def get_source(fintech, options, k):
 				#print(fintech['name'], 'retrying')
 				success = False
 				attempts += 1
-		if not success and 'ocr' in fintech:
+		if False: #not success and 'ocr' in fintech:
 			ocr_result = clean(get_source_ocr(fintech['ocr'][quote], driver).strip())
 			#print('ocr result:', ocr_result)
 			if ocr_result:
