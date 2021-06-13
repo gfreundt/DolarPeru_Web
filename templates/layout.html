@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tipo de Cambio</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+    
+    <header>
+    Dólar<span>Perú</span>
+    </header>
+    
+    <nav>
+        <a href="/compra">Compra</a>
+        <a href="/venta">Venta</a>
+        <a href="#">Canales Oficiales</a>
+        <a href="#">Noticias</a>
+        <a href="#">Calculadora</a>
+    </nav>
+
+    <main>
+        <div class="title">
+            {% block title %}{% endblock title %}
+        </div>
+        <div class="actualizado">
+            Actualizado: {{ head.time }}
+        </div>
+        <div class="promedio">
+            Promedio ({{ head.from }} FINTECHS): {{ head.value }}
+        </div>
+        <div class="graphs">
+            {% block graphs %}{% endblock graphs %}
+        </div>
+        <div class="main-info">
+            <div class="quote-box-left">
+                {% for detail in details1 %}
+                    <p class="quotes-left">
+                        <a href = {{ detail.name }} target="_blank">
+                            <img class="logos" src="{{ url_for('static', filename='images/'+detail.image) }}">
+                        </a>
+                        {{ detail.value }}
+                    </p>
+                {%endfor%}
+            </div>
+            <div class="quote-box-right">
+                {% for detail in details2 %}
+                    <p class="quotes-right">
+                        {{ detail.value }}
+                        <a href = {{ detail.name }} target="blank">
+                            <img class="logos" src="{{ url_for('static', filename='images/'+detail.image) }}">
+                        </a>
+                    </p>
+                {%endfor%}
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        Derechos Reservados: GFT 2021
+
+    </footer>
+
+</div>
+</body>
+</html>

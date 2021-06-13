@@ -1,4 +1,4 @@
-import os, sys, csv, json, time
+import os, sys, platform, csv, json, time
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 from datetime import datetime as dt, timedelta as delta
@@ -26,19 +26,25 @@ class Basics:
 		self.good, self.bad = 0,0
 
 		self.switches = [i.upper() for i in sys.argv]
-		data_path = self.find_path()
 		if "NOTEST" not in self.switches:
 			data_path = os.path.join(data_path, 'test')
-		if "/home/pi" in data_path:
+			
+		system_name, system_data_path = self.which_system()
+		if 'raspberrypi' in system_name:
 			self.CHROMEDRIVER = '/usr/bin/chromedriver'
 			self.GRAPH_PATH = os.path.join('/home', 'pi', 'webing', 'static', 'images')
 			self.DATA_STRUCTURE_FILE = os.path.join('/home', 'pi', 'Coding', 'tdc', 'data_structure.json')
-			self.PYTESSERACT_PATH = os.path.join('/home', 'pi', 'Coding', 'tdc', 'tesseract')
+			#self.PYTESSERACT_PATH = os.path.join('/home', 'pi', 'Coding', 'tdc', 'tesseract')
+		elif 'POWER' or 'GFT-Tablet' in system_name:
+			self.CHROMEDRIVER = os.path.join(data_path[:3], 'Coding', 'tdc', 'chromedriver.exe')
+			self.GRAPH_PATH = os.path.join(data_path[:3], 'Webing', 'Static', 'Images')
+			self.DATA_STRUCTURE_FILE = os.path.join(data_path[:3], 'Coding', 'tdc', 'data_structure.json')
+			#self.PYTESSERACT_PATH = os.path.join(data_path[:3], 'Program Files (x86)', 'Tesseract-OCR', 'tesseract.exe')
 		else:
 			self.CHROMEDRIVER = os.path.join(data_path[:3], 'Coding', 'tdc', 'chromedriver.exe')
 			self.GRAPH_PATH = os.path.join(data_path[:3], 'Webing', 'Static', 'Images')
 			self.DATA_STRUCTURE_FILE = os.path.join(data_path[:3], 'Coding', 'tdc', 'data_structure.json')
-			self.PYTESSERACT_PATH = os.path.join(data_path[:3], 'Program Files (x86)', 'Tesseract-OCR', 'tesseract.exe')
+
 		self.SCREENSHOT_FILE = os.path.join(data_path, 'screenshot.png')
 		self.LAST_USE_FILE = os.path.join(data_path, 'last_use.txt')
 		self.VAULT_FILE = os.path.join(data_path,'TDC_Vault.txt')
@@ -52,12 +58,16 @@ class Basics:
 		with open(self.DATA_STRUCTURE_FILE, 'r', encoding='utf-8') as file:
 			self.fintechs = json.load(file)['fintechs']
 
-	def find_path(self):
-	    paths = (r'C:\Users\Gabriel Freundt\Google Drive\Multi-Sync\sharedData\data',r'D:\Google Drive Backup\Multi-Sync\sharedData\data',
-	    		 r'C:\users\gfreu\Google Drive\Multi-Sync\sharedData\data', '/home/pi/webing/data')
-	    for path in paths:
-	        if os.path.exists(path):
-	            return path
+	def which_system(self):
+		systems = [{'name': 'GFT-Tablet', 'data_path': r'C:\users\gfreu\Google Drive\Multi-Sync\sharedData\data'},
+			 	   {'name': 'raspberrypi', 'data_path': r'/home/pi/webing/data'},
+				   {'name': 'POWER', 'data_path': r'C:\Users\Gabriel Freundt\Google Drive\Multi-Sync\sharedData\data'},
+				   {'name': 'all others', 'data_path': 'home/gfreundt/webapp/webing'}]
+		for system in systems:
+			if system['name'] in platform.node():
+				return system['name'], system['data_path']
+		return systems['all others']['name'], systems['all_others']['data_path']
+
 
 
 def set_options():
