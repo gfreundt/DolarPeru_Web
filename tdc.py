@@ -60,7 +60,7 @@ class Basics:
 		systems = [{'name': 'GFT-Tablet', 'root_path': r'C:\pythonCode'},
 			 	   {'name': 'raspberrypi', 'root_path': r'/home/pi/pythonCode'},
 				   {'name': 'POWER', 'root_path': r'D:\pythonCode'},
-				   {'name': 'all others', 'root_path': 'home/gfreundt/pythonCode'}]
+				   {'name': 'all others', 'root_path': '/home/gfreundt/pythonCode'}]
 		for system in systems:
 			if system['name'] in platform.node():
 				return system['root_path']
