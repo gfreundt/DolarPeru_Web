@@ -22,8 +22,12 @@ def construct_data(filename):
 		return data, details1, details2
 
 
-DATA_PATH = os.path.join(which_system(), 'DolarPeru_data')
+#DATA_PATH = os.path.join(which_system(), 'DolarPeru_data')
 app = Flask(__name__)
+
+@app.route("/")
+def home:
+	return "<b> Exitos! </b>"
 
 @app.route("/venta")
 def venta():
