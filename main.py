@@ -26,7 +26,7 @@ def construct_data(filename):
 app = Flask(__name__)
 
 @app.route("/")
-def home:
+def home():
 	return "<b> Exitos! </b>"
 
 @app.route("/venta")
