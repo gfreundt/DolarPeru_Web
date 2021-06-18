@@ -1,13 +1,13 @@
-import os, platform
+import os, json, platform
 from flask import Flask, redirect, url_for, render_template, request
-import json
+from  google.cloud import storage
 
 
 def which_system():
 	systems = [{'name': 'GFT-Tablet', 'root_path': r'C:\pythonCode'},
 		 	   {'name': 'raspberrypi', 'root_path': r'/home/pi/pythonCode'},
 			   {'name': 'Power', 'root_path': r'D:\pythonCode'},
-			   {'name': 'all others', 'root_path': '/home/gfreundt/pythonCode'}]
+			   {'name': 'all others', 'root_path': '/home/gabfre/pythonCode'}]
 	for system in systems:
 		if system['name'] in platform.node():
 			return system['root_path']
@@ -15,14 +15,24 @@ def which_system():
 
 
 def construct_data(filename):
-	with open(os.path.join(DATA_PATH, 'WEB_Venta.json'), mode='r') as file:
-		data = json.load(file)
-		details = data['details']
-		details1, details2 = details[:len(details)//2], details[len(details)//2:]
-		return data, details1, details2
+	# Access Google Cloud Storage  Bucket
+	client = storage.Client.from_service_account_json(json_credentials_path=GCLOUD_KEYS)
+	bucket = client.get_bucket('data-bucket-gft')
+	file_in_bucket = bucket.blob('/DolarPeru_data/' + filename)
+	data = json.loads(file_in_bucket.download_as_string().decode('utf-8'))
+	details = data['details']
+	details1, details2 = details[:len(details)//2], details[len(details)//2:]
+	return data, details1, details2
 
 
-#DATA_PATH = os.path.join(which_system(), 'DolarPeru_data')
+
+ROOT_PATH = which_system()
+SCRAPER_PATH = os.path.join(ROOT_PATH, 'DolarPeru_Scraper')
+WEB_PATH = os.path.join(ROOT_PATH, 'DolarPeru_Web')
+DATA_PATH = os.path.join(ROOT_PATH, 'DolarPeru_data')
+GCLOUD_KEYS = os.path.join(ROOT_PATH, 'gcloud_keys.json')
+
+
 app = Flask(__name__)
 
 @app.route("/")
