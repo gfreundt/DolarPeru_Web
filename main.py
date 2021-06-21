@@ -36,9 +36,6 @@ GCLOUD_KEYS = os.path.join(ROOT_PATH, 'gcloud_keys.json')
 app = Flask(__name__)
 
 @app.route("/")
-def home():
-	return "<b> Exitos! </b>"
-
 @app.route("/venta")
 def venta():
 	data, details1, details2 = construct_data('WEB_Venta.json')
