@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&family=Raleway:wght@400;600;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;550;700;900&family=Raleway:wght@400;600;800;900&display=swap");
 :root {
   --primary-color: #667AF3;
 }
@@ -67,26 +67,47 @@ main .actualizado {
   font-weight: 700;
 }
 
-main .promedio {
+main .resumen {
   color: black;
-  background-color: #c8f7fa;
-  padding-top: 15px;
-  padding-bottom: 15px;
+  background-color: #dfe3e7;
+  padding-top: 8px;
+  padding-bottom: 80px;
   font-size: 25px;
   font-weight: 700;
-  text-transform: uppercase;
+}
+
+main .resumen .promedio {
+  width: 25%;
+  float: left;
+}
+
+main .resumen .mediano {
+  width: 25%;
+  float: left;
+}
+
+main .resumen .mejor {
+  width: 25%;
+  float: left;
+}
+
+main .resumen .casas {
+  width: 25%;
+  float: left;
 }
 
 main .graphs {
   background-color: #daebec;
   text-align: left;
+  padding-bottom: 35px;
+  margin-bottom: 0px;
 }
 
 main .graphs .intraday {
   padding-left: 25px;
   padding-right: 20px;
   padding-top: 15px;
-  padding-bottom: 15px;
+  padding-bottom: 10px;
   height: 180px;
   width: 280px;
 }
@@ -95,7 +116,7 @@ main .graphs .last-5-days {
   padding-left: 25px;
   padding-right: 20px;
   padding-top: 15px;
-  padding-bottom: 15px;
+  padding-bottom: 10px;
   height: 180px;
   width: 280px;
 }
@@ -104,8 +125,29 @@ main .graphs .last-30-days {
   padding-left: 25px;
   padding-right: 10px;
   padding-top: 15px;
-  padding-bottom: 15px;
+  padding-bottom: 10px;
   height: 180px;
+}
+
+main .graphs .title-intraday {
+  font-weight: bold;
+  width: 33%;
+  float: left;
+  text-align: center;
+}
+
+main .graphs .title-last-5-days {
+  font-weight: bold;
+  width: 33%;
+  float: left;
+  text-align: center;
+}
+
+main .graphs .title-last-30-days {
+  font-weight: bold;
+  width: 33%;
+  float: left;
+  text-align: center;
 }
 
 main .main-info {

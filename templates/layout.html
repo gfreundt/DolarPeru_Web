@@ -27,13 +27,32 @@
             {% block title %}{% endblock title %}
         </div>
         <div class="actualizado">
-            Actualizado: {{ head.time }}
+            Última actualización: {{ head.time }}
+            [ {{ head.time }} ]
         </div>
-        <div class="promedio">
-            Promedio ({{ head.from }} FINTECHS): {{ head.value }}
+        <div class="resumen">
+            <div class="promedio">
+                Mediana<br>
+                {{ head.value }}
+            </div>
+            <div class="mediano">
+                Promedio<br>
+                {{ head.value }}
+            </div>
+            <div class="mejor">
+                Mejor<br>
+                {{ head.value }}
+            </div>
+            <div class="casas">
+                Casas de Cambio<br>
+                {{ head.from }}
+            </div>
         </div>
         <div class="graphs">
             {% block graphs %}{% endblock graphs %}
+            <div class="title-intraday">Intradía</div>
+            <div class="title-last-5-days">Últimos 5 días</div>
+            <div class="title-last-30-days">Últimos 30 días</div>
         </div>
         <div class="main-info">
             <div class="quote-box-left">

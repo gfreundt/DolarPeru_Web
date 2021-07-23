@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;900&family=Raleway:wght@400;600;800;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;550;700;900&family=Raleway:wght@400;600;800;900&display=swap');
 
 :root {
     --primary-color: #667AF3;
@@ -68,25 +68,46 @@ main {
         font-weight: 700;
     }
 
-    .promedio {
+    .resumen {
         color: black;
-        background-color: rgb(200, 247, 250);
-        padding-top: 15px;
-        padding-bottom: 15px;
-        font-size:25px;
+        background-color: rgb(223, 227, 231);
+        padding-top: 8px;
+        padding-bottom: 80px;
+        font-size: 25px;
         font-weight: 700;
-        text-transform: uppercase;
+
+        .promedio {
+            width: 25%;
+            float: left;
+        }
+
+        .mediano {
+            width: 25%;
+            float: left;
+        }
+
+        .mejor {
+            width: 25%;
+            float: left;
+        }
+
+        .casas {
+            width: 25%;
+            float: left;
+        }
     }
 
     .graphs {
         background-color: rgb(218, 235, 236);
         text-align: left;
+        padding-bottom: 35px;
+        margin-bottom: 0px;
 
         .intraday {
             padding-left: 25px;
             padding-right: 20px;
             padding-top: 15px;
-            padding-bottom: 15px;
+            padding-bottom: 10px;
             height: 180px;
             width: 280px;
         }
@@ -95,7 +116,7 @@ main {
             padding-left: 25px;
             padding-right: 20px;
             padding-top: 15px;
-            padding-bottom: 15px;
+            padding-bottom: 10px;
             height: 180px;
             width: 280px;
         }
@@ -104,8 +125,29 @@ main {
             padding-left: 25px;
             padding-right: 10px;
             padding-top: 15px;
-            padding-bottom: 15px;
+            padding-bottom: 10px;
             height: 180px;
+        }
+
+        .title-intraday {
+            font-weight: bold;
+            width:33%;
+            float: left;
+            text-align: center;
+        }
+
+        .title-last-5-days {
+            font-weight: bold;
+            width:33%;
+            float: left;
+            text-align: center;
+        }
+
+        .title-last-30-days {
+            font-weight: bold;
+            width:33%;
+            float: left;
+            text-align: center;
         }
 
     }
