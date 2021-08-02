@@ -17,9 +17,11 @@
     <nav>
         <a href="/compra">Compra</a>
         <a href="/venta">Venta</a>
+        <!-- Suspended
         <a href="#">Canales Oficiales</a>
         <a href="#">Noticias</a>
         <a href="#">Calculadora</a>
+        --> 
     </nav>
 
     <main>
@@ -27,25 +29,25 @@
             {% block title %}{% endblock title %}
         </div>
         <div class="actualizado">
-            Última actualización: {{ head.time }}
-            [ {{ head.time }} ]
+            Actualizado: {{ head.time }}
+            [{{ head.date }}]
         </div>
         <div class="resumen">
             <div class="promedio">
-                Mediana<br>
-                {{ head.value }}
+                Promedio<br>
+                {{ head.promedio }}
             </div>
             <div class="mediano">
-                Promedio<br>
-                {{ head.value }}
+                Mediana<br>
+                {{ head.mediana }}
             </div>
             <div class="mejor">
                 Mejor<br>
-                {{ head.value }}
+                {{ head.mejor }}
             </div>
-            <div class="casas">
-                Casas de Cambio<br>
-                {{ head.from }}
+            <div class="consultas">
+                Consultas<br>
+                {{ head.consultas }}
             </div>
         </div>
         <div class="graphs">

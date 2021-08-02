@@ -1,4 +1,4 @@
-import os, json, platform
+import os, json, platform, sys
 from flask import Flask, redirect, url_for, render_template, request
 from  google.cloud import storage
 
@@ -18,7 +18,7 @@ def which_system():
 def construct_data(filename):
 	# Access Google Cloud Storage Bucket
 	client = storage.Client.from_service_account_json(json_credentials_path=GCLOUD_KEYS)
-	bucket = client.get_bucket('data-bucket-gft')
+	bucket = client.get_bucket(GCLOUD_BUCKET)
 	file_in_bucket = bucket.blob('/DolarPeru_data/' + filename)
 	data = json.loads(file_in_bucket.download_as_string().decode('utf-8'))
 	details = data['details']
@@ -31,6 +31,7 @@ SCRAPER_PATH = os.path.join(ROOT_PATH, 'DolarPeru_Scraper')
 WEB_PATH = os.path.join(ROOT_PATH, 'DolarPeru_Web')
 DATA_PATH = os.path.join(ROOT_PATH, 'DolarPeru_data')
 GCLOUD_KEYS = os.path.join(ROOT_PATH, 'gcloud_keys.json')
+GCLOUD_BUCKET = 'data-bucket-gft-devops'   # testing = 'data-bucket-gft-devops' | production = 'data-bucket-gft'
 
 
 app = Flask(__name__)
