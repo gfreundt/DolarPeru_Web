@@ -8,16 +8,19 @@ def which_system():
 		 	   {'name': 'raspberrypi', 'root_path': r'/home/pi/pythonCode'},
 			   {'name': 'Power', 'root_path': r'D:\pythonCode'},
 			   {'name': 'Ubuntu-gft', 'root_path': '/home/gabriel/pythonCode'},
-			   {'name': 'all others', 'root_path': '/home/gabfre/pythonCode'}]
+			   {'name': 'Google Cloud App Engine', 'root_path': '/home/gabfre/pythonCode'}]
 	for system in systems:
 		if system['name'] in platform.node():
-			return system['root_path']
-	return systems[-1]['root_path']
+			return system['name'], system['root_path']
+	return systems[-1]['name'], systems[-1]['root_path']
 
 
 def construct_data(filename):
 	# Access Google Cloud Storage Bucket
-	client = storage.Client.from_service_account_json(json_credentials_path=GCLOUD_KEYS)
+	if SYSTEM != 'Google Cloud App Engine': 
+		client = storage.Client.from_service_account_json(json_credentials_path=GCLOUD_KEYS)
+	else:
+		client = storage.Client()
 	bucket = client.get_bucket(GCLOUD_BUCKET)
 	file_in_bucket = bucket.blob('/DolarPeru_data/' + filename)
 	data = json.loads(file_in_bucket.download_as_string().decode('utf-8'))
@@ -26,13 +29,9 @@ def construct_data(filename):
 	return data, details1, details2
 
 
-ROOT_PATH = which_system()
-SCRAPER_PATH = os.path.join(ROOT_PATH, 'DolarPeru_Scraper')
-WEB_PATH = os.path.join(ROOT_PATH, 'DolarPeru_Web')
-DATA_PATH = os.path.join(ROOT_PATH, 'DolarPeru_data')
+SYSTEM, ROOT_PATH = which_system()
 GCLOUD_KEYS = os.path.join(ROOT_PATH, 'gcloud_keys.json')
 GCLOUD_BUCKET = 'data-bucket-gft-devops'   # testing = 'data-bucket-gft-devops' | production = 'data-bucket-gft'
-
 
 app = Flask(__name__)
 
