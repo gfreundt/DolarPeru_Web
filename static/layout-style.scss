@@ -218,8 +218,19 @@ footer {
     padding-top: 5px;
     padding-bottom: 5px;
     font-size: 10px;
-    text-align: right;
     padding-right: 5px ;
+
+    .contact {
+        padding-left: 25px;
+        text-align: left;
+        font-weight: bolder;
+        float: left;
+    }
+
+    .derechos {
+        padding-right: 25px;
+        text-align: right;
+    }
 }
 
 

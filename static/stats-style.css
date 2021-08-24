@@ -209,7 +209,18 @@ footer {
   padding-top: 5px;
   padding-bottom: 5px;
   font-size: 10px;
-  text-align: right;
   padding-right: 5px;
 }
-/*# sourceMappingURL=style.css.map */
+
+footer .contact {
+  padding-left: 25px;
+  text-align: left;
+  font-weight: bolder;
+  float: left;
+}
+
+footer .derechos {
+  padding-right: 25px;
+  text-align: right;
+}
+/*# sourceMappingURL=stats-style.css.map */
