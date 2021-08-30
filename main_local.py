@@ -32,7 +32,7 @@ def get_data_from_bucket(filename):
 
 
 def get_data_from_file(filename):
-    with open("c:/pythonCode/DolarPeru_data/" + filename, "r") as file:
+    with open(filename, "r") as file:
         data = json.loads(file.read())
     return data
 
@@ -42,6 +42,7 @@ def split_in_two(details):
 
 
 SYSTEM, ROOT_PATH = which_system()
+DATA_PATH = os.path.join(ROOT_PATH, "DolarPeru_data")
 GCLOUD_KEYS = os.path.join(ROOT_PATH, "gcloud_keys.json")
 GCLOUD_BUCKET = "data-bucket-gft"  # testing = 'data-bucket-gft-devops' | production = 'data-bucket-gft'
 
