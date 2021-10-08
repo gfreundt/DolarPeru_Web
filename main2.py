@@ -76,13 +76,14 @@ def stats():
 
 @app.route("/fintech/<path:id>")
 def fintech(id):
-    data = get_data_from_file("WEB_" + id + ".json")
+    print(id)
+    data = get_data_from_file(os.path.join(DATA_PATH,"web" + id + ".json"))
     return render_template(
         "fintech.html",
         id=id,
         datos=data["datos"],
-        ultima=data["cotizaciones"][-1],
-        antiguas=data["cotizaciones"][:-1],
+        ultima=data["cotizaciones"]["vigente"][0],
+        antiguas=data["cotizaciones"]["historicas"],
     )
 
 

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tipo de Cambio</title>
+    <link rel="stylesheet" href="/static/fintech-style.css">
+</head>
+<body>
+    <header>
+        Dólar<span>Perú</span>
+    </header>
+    <div class="logo-container">
+        <img class="logos" src="{{ url_for('static', filename='images/'+datos.image) }}">
+        <div class="l1">{{datos.name}}</div>
+    </div>
+    <div class="ultima-container">
+        <div class="section-title">Última Cotización
+            <div class="line2">Timestamp: {{ultima.timestamp}}</div>
+        </div>
+        <div class="compraventa">
+            <div class="compra">
+                Compra <br>
+                {{ultima.compra}}
+            </div>
+            <div class="venta">
+                Venta <br>
+                {{ultima.venta}}
+            </div>
+        </div>
+    </div>
+    <div class="graficos">
+        <img class="intraday" src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/intraday-compra.png">
+        <img class="last-5-days" src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/last5days-compra.png">
+        <img class="last-30-days" src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/last30days-compra.png">
+        <div class="title-intraday">Intradía</div>
+        <div class="title-last-5-days">Últimos 5 días</div>
+        <div class="title-last-30-days">Últimos 100 días</div>
+    </div>
+    <div class="datos-container">
+        <div class="section-title">Información General</div>
+        <table>
+            <tr>
+                <td class="left-col">Nombre Comercial</td>
+                <td class="right-col">{{datos.name}}</td>
+            </tr>
+            <tr>
+                <td class="left-col">RUC</td>
+                <td class="right-col">{{datos.ruc}}</td>
+            </tr>
+            <tr>
+                <td class="left-col">Contacto</td>
+                <td class="right-col">{{datos.contacto}}</td>
+            </tr>
+            <tr>
+                <td class="left-col">Registro SBS</td>
+                <td class="right-col">{{datos.registro_SBS}}</td>
+            </tr>
+            <tr>
+                <td class="left-col">Página Web</td>
+                <td class="right-col">{{datos.link}}</td>
+            </tr>
+            <tr>
+                <td class="left-col">Transferencias Inmediatas</td>
+                <td class="right-col">{{datos.inmediatos}}</td>
+            </tr>
+            <tr>
+                <td class="left-col">Transferencias Interbancarias</td>
+                <td class="right-col">{{datos.interbancario}}</td>
+            </tr>
+        </table>
+    </div>
+    <div class="historicas">
+        <div class="section-title">
+            Cotizaciones Históricas
+        </div>
+        <table class="tabla">
+            <tr>
+                <th>Fecha</th>
+                <th>Hora</th>
+                <th>Compra</th>
+                <th>Venta</th>
+            </tr>
+            {% for quote in antiguas %}
+            <tr>
+                <td>fecha</td>
+                <td>hora</td>
+                <td>{{quote.compra}}</td>
+                <td>{{quote.venta}}</td>
+            </tr>
+            {%endfor%}
+        </table>
+    </div>
+    
+</body>
+</html>
+
