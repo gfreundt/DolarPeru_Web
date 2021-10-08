@@ -52,7 +52,7 @@ app = Flask(__name__)
 @app.route("/")
 @app.route("/venta")
 def venta():
-    data = get_data_from_file(os.path.join(DATA_PATH,"web000.json"))["venta"]
+    data = get_data_from_file(os.path.join(DATA_PATH, "web000.json"))["venta"]
     details1, details2 = split_in_two(data["incluidos"])
     return render_template(
         "venta.html", head=data["head"], details1=details1, details2=details2
@@ -61,7 +61,7 @@ def venta():
 
 @app.route("/compra")
 def compra():
-    data = get_data_from_file(os.path.join(DATA_PATH,"web000.json"))["compra"]
+    data = get_data_from_file(os.path.join(DATA_PATH, "web000.json"))["compra"]
     details1, details2 = split_in_two(data["incluidos"])
     return render_template(
         "compra.html", head=data["head"], details1=details1, details2=details2
@@ -70,14 +70,19 @@ def compra():
 
 @app.route("/stats")
 def stats():
-    data = get_data_from_bucket("stats.json")
-    return render_template("stats.html", meta=data["Meta"], results=data["Results"])
+    data = get_data_from_file(os.path.join(DATA_PATH, "stats.json"))
+    return render_template(
+        "stats.html",
+        meta=data["meta"],
+        activity=data["activity"],
+        scraper_results=data["scraper_results"],
+    )
 
 
 @app.route("/fintech/<path:id>")
 def fintech(id):
     print(id)
-    data = get_data_from_file(os.path.join(DATA_PATH,"web" + id + ".json"))
+    data = get_data_from_file(os.path.join(DATA_PATH, "web" + id + ".json"))
     return render_template(
         "fintech.html",
         id=id,

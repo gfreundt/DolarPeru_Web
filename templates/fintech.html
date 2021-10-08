@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+<<<<<<< HEAD
+=======
+
+>>>>>>> 8a0fb06432e22370b520b7288a0a75a15c1824e4
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <title>Tipo de Cambio</title>
     <link rel="stylesheet" href="/static/fintech-style.css">
 </head>
@@ -96,3 +101,41 @@
 </body>
 </html>
 
+=======
+    <title>Tipo de Cambio - Detalle</title>
+    <link rel="stylesheet" href="/static/fintech-style.css">
+</head>
+
+<body>
+    <a href={{ datos.name }} target="_blank">
+        <img class="logos" src="{{ url_for('static', filename='images/'+datos.image) }}">
+    </a>
+    Más Reciente:
+    Compra: {{ultima.compra}}</td>
+    Venta: {{ultima.venta}}</td>
+    Actualizado: {{ultima.time}} [{{ultima.date}}]</td>
+    <table>
+        <tr>
+            <th>Compra</th>
+            <th>Venta</th>
+            <th>Actualizado</th>
+        </tr>
+        {% for cot in antiguas%}
+        <tr>
+            <td>{{cot.compra}}</td>
+            <td>{{cot.venta}}</td>
+            <td>{{cot.time}} [{{cot.date}}]</td>
+        </tr>
+        {%endfor%}
+    </table>
+    <a href={{ datos.name }} target="_blank">
+        <img class="logos" src="{{ url_for('static', filename='images/'+datos.image) }}">
+    </a>
+    <a href={{ datos.name }} target="_blank">
+        <img class="logos" src="{{ url_for('static', filename='images/'+datos.image) }}">
+    </a>
+
+</body>
+
+</html>
+>>>>>>> 8a0fb06432e22370b520b7288a0a75a15c1824e4
