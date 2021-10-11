@@ -43,6 +43,8 @@ def split_in_two(details):
 
 SYSTEM, ROOT_PATH = which_system()
 DATA_PATH = os.path.join(ROOT_PATH, "DolarPeru_data")
+GRAPH_PATH = os.path.join(DATA_PATH, "graphs")
+WEBFILE_PATH = os.path.join(DATA_PATH, "webfiles")
 GCLOUD_KEYS = os.path.join(ROOT_PATH, "gcloud_keys.json")
 GCLOUD_BUCKET = "data-bucket-gft"  # testing = 'data-bucket-gft-devops' | production = 'data-bucket-gft'
 
@@ -82,7 +84,7 @@ def stats():
 @app.route("/fintech/<path:id>")
 def fintech(id):
     print(id)
-    data = get_data_from_file(os.path.join(DATA_PATH, "web" + id + ".json"))
+    data = get_data_from_file(os.path.join(WEBFILE_PATH, "webfile-" + id + ".json"))
     return render_template(
         "fintech.html",
         id=id,

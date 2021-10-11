@@ -1,91 +1,96 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tipo de Cambio</title>
-    <link rel="stylesheet" href="/static/layout-style.css">
-</head>
-<body>
-    <script async="async" data-cfasync="false" src="//upgulpinon.com/1?z=4423552"></script>
-    <div class="container">
-    
-    <header>
-    <script type="text/javascript" src="//inpage-push.com/400/4424167" data-cfasync="false" async="async"></script>
-    Dólar<span>Perú</span>
-    </header>
-    
-    <nav>
-        <a href="/compra">Compra</a>
-        <a href="/venta">Venta</a>
-        <!-- Suspended
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Tipo de Cambio</title>
+        <link rel="stylesheet" href="/static/layout-style.css">
+        <meta http-equiv="refresh" content="450">
+        <script async
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5934459102093169"
+            crossorigin="anonymous"></script>
+    </head>
+
+    <body>
+        <div class="container">
+
+            <header>
+                Dólar<span>Perú</span>
+            </header>
+
+            <nav>
+                <a href="/compra">Compra</a>
+                <a href="/venta">Venta</a>
+                <!-- Suspended
         <a href="#">Canales Oficiales</a>
         <a href="#">Noticias</a>
         <a href="#">Calculadora</a>
-        --> 
-    </nav>
+        -->
+            </nav>
 
-    <main>
-        <div class="title">
-            {% block title %}{% endblock title %}
-        </div>
-        <div class="actualizado">
-            Actualizado: {{ head.hora }}
-            [{{ head.fecha }}]
-        </div>
-        <div class="resumen">
-            <div class="promedio">
-                Promedio<br>
-                {{ head.promedio }}
-            </div>
-            <div class="mediano">
-                Mediana<br>
-                {{ head.mediana }}
-            </div>
-            <div class="mejor">
-                Mejor<br>
-                {{ head.mejor }}
-            </div>
-            <div class="consultas">
-                Consultas<br>
-                {{ head.consultas }}
-            </div>
-        </div>
-        <div class="graphs">
-            {% block graphs %}{% endblock graphs %}
-            <div class="title-intraday">Intradía</div>
-            <div class="title-last-5-days">Últimos 5 días</div>
-            <div class="title-last-30-days">Últimos 30 días</div>
-        </div>
-        <div class="main-info">
-            <div class="quote-box-left">
-                {% for detail in details1 %}
-                    <p class="quotes-left">
-                        <a href = {{ detail.name }} target="_blank">
-                            <img class="logos" src="{{ url_for('static', filename='images/'+detail.image) }}">
-                        </a>
-                        {{ detail.value }}
-                    </p>
-                {%endfor%}
-            </div>
-            <div class="quote-box-right">
-                {% for detail in details2 %}
-                    <p class="quotes-right">
-                        {{ detail.value }}
-                        <a href = {{ detail.name }} target="blank">
-                            <img class="logos" src="{{ url_for('static', filename='images/'+detail.image) }}">
-                        </a>
-                    </p>
-                {%endfor%}
-            </div>
-        </div>
-    </main>
-    <footer>
-        <div class="contact">contacto: gabriel@dolarpe.com</div>
-        <div class="derechos">Derechos Reservados (2021)</div>
-    </footer>
+            <main>
+                <div class="title">
+                    {% block title %}{% endblock title %}
+                </div>
+                <div class="actualizado">
+                    Actualizado: {{ head.hora }}
+                    [{{ head.fecha }}]
+                </div>
+                <div class="resumen">
+                    <div class="promedio">
+                        Promedio<br>
+                        {{ head.promedio }}
+                    </div>
+                    <div class="mediano">
+                        Mediana<br>
+                        {{ head.mediana }}
+                    </div>
+                    <div class="mejor">
+                        Mejor<br>
+                        {{ head.mejor }}
+                    </div>
+                    <div class="consultas">
+                        Consultas<br>
+                        {{ head.consultas }}
+                    </div>
+                </div>
+                <div class="graphs">
+                    {% block graphs %}{% endblock graphs %}
+                    <div class="title-intraday">Intradía</div>
+                    <div class="title-last-5-days">Últimos 5 días</div>
+                    <div class="title-last-30-days">Últimos 30 días</div>
+                </div>
+                <div class="main-info">
+                    <div class="quote-box-left">
+                        {% for detail in details1 %}
+                        <p class="quotes-left">
+                            <a href=fintech/{{detail.id}}>
+                                <img class="logos" src="{{ url_for('static', filename='images/'+detail.image) }}">
+                                {{ detail.value }}
+                            </a>
+                        </p>
+                        {%endfor%}
+                    </div>
+                    <div class="quote-box-right">
+                        {% for detail in details2 %}
+                        <p class="quotes-right">
+                            <a href=fintech/{{detail.id}}>
+                                {{ detail.value }}
+                                <img class="logos" src="{{ url_for('static', filename='images/'+detail.image) }}">
+                            </a>
+                        </p>
+                        {%endfor%}
+                    </div>
+                </div>
+            </main>
+            <footer>
+                <div class="contact">contacto: gabriel@dolarpe.com</div>
+                <div class="derechos">Derechos Reservados (2021)</div>
+            </footer>
 
-</div>
-</body>
+        </div>
+    </body>
+
 </html>
