@@ -83,7 +83,7 @@ def stats():
 
 @app.route("/fintech/<path:id>")
 def fintech(id):
-    print(id)
+    print(id, WEBFILE_PATH)
     data = get_data_from_file(os.path.join(WEBFILE_PATH, "webfile-" + id + ".json"))
     return render_template(
         "fintech.html",
