@@ -18,6 +18,7 @@ def which_system():
 
 
 def get_data_from_bucket(filename):
+    print("*****************", filename)
     # Access Google Cloud Storage Bucket
     if SYSTEM != "Google Cloud App Engine":
         client = storage.Client.from_service_account_json(
@@ -26,7 +27,7 @@ def get_data_from_bucket(filename):
     else:
         client = storage.Client()
     bucket = client.get_bucket(GCLOUD_BUCKET)
-    file_in_bucket = bucket.blob("/DolarPeru_data/" + filename)
+    file_in_bucket = bucket.blob(filename)
     data = json.loads(file_in_bucket.download_as_string().decode("utf-8"))
     return data
 
@@ -45,6 +46,9 @@ SYSTEM, ROOT_PATH = which_system()
 DATA_PATH = os.path.join(ROOT_PATH, "DolarPeru_data")
 GRAPH_PATH = os.path.join(DATA_PATH, "graphs")
 WEBFILE_PATH = os.path.join(DATA_PATH, "webfiles")
+GCLOUD_ROOT_PATH = r"/DolarPeru_data"
+GCLOUD_GRAPH_PATH = GCLOUD_ROOT_PATH + r"/graphs"
+GCLOUD_WEBFILE_PATH = GCLOUD_ROOT_PATH + r"/webfiles"
 GCLOUD_KEYS = os.path.join(ROOT_PATH, "gcloud_keys.json")
 GCLOUD_BUCKET = "data-bucket-gft"  # testing = 'data-bucket-gft-devops' | production = 'data-bucket-gft'
 
@@ -54,7 +58,7 @@ app = Flask(__name__)
 @app.route("/")
 @app.route("/venta")
 def venta():
-    data = get_data_from_file(os.path.join(WEBFILE_PATH, "webfile-000.json"))["venta"]
+    data = get_data_from_bucket(GCLOUD_WEBFILE_PATH + r"/webfile-000.json")["venta"]
     details1, details2 = split_in_two(data["incluidos"])
     return render_template(
         "venta.html", head=data["head"], details1=details1, details2=details2
@@ -63,7 +67,7 @@ def venta():
 
 @app.route("/compra")
 def compra():
-    data = get_data_from_file(os.path.join(WEBFILE_PATH, "webfile-000.json"))["compra"]
+    data = get_data_from_bucket(GCLOUD_WEBFILE_PATH + r"/webfile-000.json")["compra"]
     details1, details2 = split_in_two(data["incluidos"])
     return render_template(
         "compra.html", head=data["head"], details1=details1, details2=details2
@@ -72,7 +76,7 @@ def compra():
 
 @app.route("/stats")
 def stats():
-    data = get_data_from_file(os.path.join(DATA_PATH, "stats.json"))
+    data = get_data_from_bucket(GCLOUD_ROOT_PATH + r"/stats.json")
     return render_template(
         "stats.html",
         meta=data["meta"],
@@ -84,7 +88,7 @@ def stats():
 @app.route("/fintech/<path:id>")
 def fintech(id):
     print(id, WEBFILE_PATH)
-    data = get_data_from_file(os.path.join(WEBFILE_PATH, "webfile-" + id + ".json"))
+    data = get_data_from_bucket(GCLOUD_WEBFILE_PATH + r"/webfile-" + id + ".json")
     return render_template(
         "fintech.html",
         id=id,
