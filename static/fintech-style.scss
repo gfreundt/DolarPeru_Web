@@ -39,20 +39,6 @@ body {
         }
     }
     
-    .section-title {
-        background-color: lightgray;
-        padding-top: 10px;
-        padding-bottom: 10px;
-        text-align: center;
-        font-size: 20px;
-        font-weight: 700;
-
-        .line2 {
-            font-size: 15px;
-            font-weight: 600;
-            }
-        }
-
     .logo-container {
         text-align: center;
 
@@ -62,19 +48,30 @@ body {
             margin: -20px auto 5px auto;
             padding: 5px 5px 5px 5px;
         }    
-
-        .l1 {
-            font-size: 35px;
-            font-weight: 800;
-            text-transform: uppercase;
-        }
-
     }
         
     .ultima-container {
         background-color: rgb(223, 227, 231);
-        padding-bottom: 80px;
+        padding-bottom: 45px;
         text-align: center;
+
+        .l1 {
+            background-color: lightgray;
+            font-size: 35px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+        
+        .subtitle {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .line2 {
+            color: grey;
+            font-size: 15px;
+            font-weight: 600;
+            }
 
         .compraventa {
             background-color: rgb(231, 223, 224);
@@ -95,33 +92,33 @@ body {
     }
 
 
-    .graficos {
+    .graficos-compra {
         background-color: rgb(218, 235, 236);
         text-align: left;
-        padding-bottom: 35px;
+        padding-bottom: 0px;
         margin-bottom: 0px;
-    }
+    
 
         .intraday {
             padding-left: 25px;
             padding-right: 20px;
             padding-top: 15px;
-            padding-bottom: 10px;
+            padding-bottom: 12px;
             width: 280px;
         }
 
-        .last-5-days {
+        .last-7-days {
             padding-left: 25px;
             padding-right: 20px;
             padding-top: 15px;
-            padding-bottom: 10px;
+            padding-bottom: 12px;
             width: 280px;
         }
 
-        .last-30-days {
+        .last-100-days {
             padding-left: 25px;
             padding-right: 10px;
-            padding-top: 15px;
+            padding-top: 10px;
             padding-bottom: 10px;
             width: 280px;
         }
@@ -133,24 +130,64 @@ body {
             text-align: center;
         }
 
-        .title-last-5-days {
+        .title-last-7-days {
             font-weight: bold;
             width:33%;
             float: left;
             text-align: center;
         }
 
-        .title-last-30-days {
+        .title-last-100-days {
             font-weight: bold;
             width:33%;
             float: left;
             text-align: center;
         }
+    }
 
+    .graficos-venta {
+        background-color: rgb(218, 235, 236);
+        text-align: left;
+        padding-bottom: 15px;
+        margin-bottom: 0px;
+    
+
+        .intraday {
+            padding-left: 25px;
+            padding-right: 20px;
+            padding-top: 0px;
+            padding-bottom: 10px;
+            width: 280px;
+        }
+
+        .last-7-days {
+            padding-left: 25px;
+            padding-right: 20px;
+            padding-top: 0px;
+            padding-bottom: 10px;
+            width: 280px;
+        }
+
+        .last-100-days {
+            padding-left: 25px;
+            padding-right: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
+            width: 280px;
+        }
     }    
     .datos-container {
         margin-top: 0px;
         background-color: rgb(223, 227, 231);
+
+        .section-title {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            background-color: lightgray;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+        }
 
         table {
             width: 100%;
@@ -169,6 +206,15 @@ body {
         }
     }
     .historicas {
+
+        .section-title {
+            padding-top: 5px;
+            padding-bottom: 5px;
+            background-color: lightgray;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 600;
+        }
 
         .tabla {
             margin-top: 10px;
@@ -192,3 +238,5 @@ body {
         }
 
     }
+    
+}

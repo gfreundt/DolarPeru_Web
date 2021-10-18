@@ -7,6 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Tipo de Cambio</title>
         <link rel="stylesheet" href="/static/fintech-style.css">
+        <meta http-equiv="refresh" content="450">
     </head>
 
     <body>
@@ -15,35 +16,37 @@
         </header>
         <div class="logo-container">
             <img class="logos" src="{{ url_for('static', filename='images/'+datos.image) }}">
-            <div class="l1">{{datos.name}}</div>
         </div>
         <div class="ultima-container">
-            <div class="section-title">Última Cotización
-                <div class="line2">Timestamp: {{ultima.timestamp}}</div>
-            </div>
+            <div class="l1">{{datos.name}}</div>
+            <div class="line2">Actualizado: {{ultima.hora}} [{{ultima.fecha}}]</div>
             <div class="compraventa">
                 <div class="compra">
-                    Compra <br>
-                    {{ultima.compra}}
+                    Compra: {{ultima.compra}}
                 </div>
                 <div class="venta">
-                    Venta <br>
-                    {{ultima.venta}}
+                    Venta: {{ultima.venta}}
                 </div>
             </div>
         </div>
-        <div class="graficos">
-            <!-- 
-        <img class="intraday" src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/intraday-compra.png">
-        <img class="last-5-days" src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/last5days-compra.png">
-        <img class="last-30-days" src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/last30days-compra.png">
-        -->
-            <img class="intraday" src="{{ url_for('static', filename='graphs/graph-'+id+'-venta-intraday.png') }}">
-            <img class="last-5-days" src="{{ url_for('static', filename='graphs/graph-'+id+'-venta-7days.png') }}">
-            <img class="last-30-days" src="{{ url_for('static', filename='graphs/graph-'+id+'-venta-100days.png') }}">
+        <div class="graficos-compra">
+            <img class="intraday"
+                src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/graphs/graph-{{id}}-venta-intraday.png">
+            <img class="last-7-days"
+                src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/graphs/graph-{{id}}-venta-7days.png">
+            <img class="last-100-days"
+                src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/graphs/graph-{{id}}-venta-100days.png">
             <div class="title-intraday">Intradía</div>
-            <div class="title-last-5-days">Semana Pasada</div>
-            <div class="title-last-30-days">Últimos 100 días</div>
+            <div class="title-last-7-days">Semana Pasada</div>
+            <div class="title-last-100-days">Últimos 100 días</div>
+        </div>
+        <div class="graficos-venta">
+            <img class="intraday"
+                src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/graphs/graph-{{id}}-venta-intraday.png">
+            <img class="last-7-days"
+                src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/graphs/graph-{{id}}-venta-7days.png">
+            <img class="last-100-days"
+                src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/graphs/graph-{{id}}-venta-100days.png">
         </div>
         <div class="datos-container">
             <div class="section-title">Información General</div>
@@ -78,6 +81,7 @@
                 </tr>
             </table>
         </div>
+        <!--- 
         <div class="historicas">
             <div class="section-title">
                 Cotizaciones Históricas
@@ -99,6 +103,7 @@
                 {%endfor%}
             </table>
         </div>
+        --->
 
     </body>
 
