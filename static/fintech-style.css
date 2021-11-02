@@ -15,6 +15,7 @@ body header {
   font-weight: 700;
   margin-top: 5px;
   padding-top: 10px;
+  text-decoration: none;
 }
 
 body header span {
