@@ -18,7 +18,6 @@ def which_system():
 
 
 def get_data_from_bucket(filename):
-    print("*****************", filename)
     # Access Google Cloud Storage Bucket
     if SYSTEM != "Google Cloud App Engine":
         client = storage.Client.from_service_account_json(
