@@ -25,7 +25,7 @@
             {% for fintech in scraper_results %}
             <tr>
                 <td>{{fintech.id}}</td>
-                <td class={{fintech.color}}>{{fintech.name}}</td>
+                <td class={{fintech.color}}><a href={{fintech.url}} target="_blank">{{fintech.name}}</a></td>
                 <td class={{fintech.color}}>{{fintech.success}}</td>
                 {% for d in fintech.latest %}
                 <td class="symbol-row">{{d}}</td>

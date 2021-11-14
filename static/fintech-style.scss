@@ -1,21 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;550;700;900&family=Raleway:wght@400;600;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;550;700;900&family=Raleway:wght@400;600;800;900&display=swap");
 
 :root {
-    --primary-color: #667AF3;
+    --primary-color: #667af3;
 }
 
 body {
-    background-color: #F2F2F2;
+    background-color: #f2f2f2;
     width: 1024px;
     margin: 10px;
-    font-family: 'Poppins';
+    font-family: "Poppins";
 
     header {
         font-size: 40px;
         font-weight: 700;
         margin-top: 5px;
-        padding-top:10px;
-    
+        padding-top: 10px;
+        text-decoration: none;
+
         span {
             color: var(--primary-color);
         }
@@ -27,18 +28,17 @@ body {
         padding-top: 6px;
         padding-bottom: 6px;
         border-radius: 25px;
-        
-    
+
         a {
             color: var(--primary-color);
             font-size: 20px;
             font-weight: 600;
-            text-decoration: none;  
+            text-decoration: none;
             padding-left: 45px;
-            padding-right: 45px;      
+            padding-right: 45px;
         }
     }
-    
+
     .logo-container {
         text-align: center;
 
@@ -47,9 +47,9 @@ body {
             display: block;
             margin: -20px auto 5px auto;
             padding: 5px 5px 5px 5px;
-        }    
+        }
     }
-        
+
     .ultima-container {
         background-color: rgb(223, 227, 231);
         padding-bottom: 45px;
@@ -61,7 +61,7 @@ body {
             font-weight: 800;
             text-transform: uppercase;
         }
-        
+
         .subtitle {
             font-size: 20px;
             font-weight: 600;
@@ -71,7 +71,7 @@ body {
             color: grey;
             font-size: 15px;
             font-weight: 600;
-            }
+        }
 
         .compraventa {
             background-color: rgb(231, 223, 224);
@@ -80,24 +80,22 @@ body {
             font-weight: 700;
 
             .compra {
-                width:50%;
+                width: 50%;
                 float: left;
             }
-            
+
             .venta {
-                width:50%;
+                width: 50%;
                 float: left;
             }
         }
     }
-
 
     .graficos-compra {
         background-color: rgb(218, 235, 236);
         text-align: left;
         padding-bottom: 0px;
         margin-bottom: 0px;
-    
 
         .intraday {
             padding-left: 25px;
@@ -125,21 +123,21 @@ body {
 
         .title-intraday {
             font-weight: bold;
-            width:33%;
+            width: 33%;
             float: left;
             text-align: center;
         }
 
         .title-last-7-days {
             font-weight: bold;
-            width:33%;
+            width: 33%;
             float: left;
             text-align: center;
         }
 
         .title-last-100-days {
             font-weight: bold;
-            width:33%;
+            width: 33%;
             float: left;
             text-align: center;
         }
@@ -150,7 +148,6 @@ body {
         text-align: left;
         padding-bottom: 15px;
         margin-bottom: 0px;
-    
 
         .intraday {
             padding-left: 25px;
@@ -175,7 +172,7 @@ body {
             padding-bottom: 10px;
             width: 280px;
         }
-    }    
+    }
     .datos-container {
         margin-top: 0px;
         background-color: rgb(223, 227, 231);
@@ -190,23 +187,40 @@ body {
         }
 
         table {
-            width: 100%;
+            text-decoration: none;
 
             .left-col {
+                width: 30%;
                 font-weight: 600;
                 text-align: right;
                 padding-right: 5px;
             }
 
             .right-col {
+                width: 14%;
                 font-weight: 450;
                 text-align: left;
                 padding-left: 5px;
             }
+
+            .rs-col {
+                width: 14%;
+                font-weight: 450;
+                text-align: left;
+                padding-left: 5px;
+
+                a {
+                    color: black;
+                    text-decoration: none;
+                }
+
+                img {
+                    width: 30px;
+                }
+            }
         }
     }
     .historicas {
-
         .section-title {
             padding-top: 5px;
             padding-bottom: 5px;
@@ -221,22 +235,21 @@ body {
             width: 100%;
             border-collapse: collapse;
             text-align: center;
-    
-            th, td {
+
+            th,
+            td {
                 padding: 3px;
                 border-bottom: 1px solid #ddd;
             }
-    
+
             tr:nth-child(even) {
                 background-color: blue;
                 color: white;
             }
             tr:nth-child(odd) {
                 background-color: white;
-                color: blue
+                color: blue;
             }
         }
-
     }
-    
 }

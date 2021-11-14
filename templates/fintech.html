@@ -31,11 +31,11 @@
         </div>
         <div class="graficos-compra">
             <img class="intraday"
-                src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/graphs/graph-{{id}}-venta-intraday.png">
+                src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/graphs/graph-{{id}}-compra-intraday.png">
             <img class="last-7-days"
-                src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/graphs/graph-{{id}}-venta-7days.png">
+                src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/graphs/graph-{{id}}-compra-7days.png">
             <img class="last-100-days"
-                src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/graphs/graph-{{id}}-venta-100days.png">
+                src="https://storage.googleapis.com/data-bucket-gft//DolarPeru_data/graphs/graph-{{id}}-compra-100days.png">
             <div class="title-intraday">Intradía</div>
             <div class="title-last-7-days">Semana Pasada</div>
             <div class="title-last-100-days">Últimos 100 días</div>
@@ -57,36 +57,43 @@
                 </tr>
                 <tr>
                     <td class="left-col">Marketing</td>
-                    <td class="right-col">{{datos.texto_libre}}</td>
+                    <td colspan="5" class="right-col">{{datos.texto_libre}}</td>
                 </tr>
                 <tr>
                     <td class="left-col">RUC</td>
-                    <td class="right-col">{{datos.ruc}}</td>
+                    <td colspan="5" class="right-col">{{datos.ruc}}</td>
                 </tr>
                 <tr>
                     <td class="left-col">Registro SBS</td>
                     <td class="right-col">{{datos.registro_SBS}}</td>
                 </tr>
                 <tr>
-                    <td class="left-col">Contacto</td>
-                    <td class="right-col">{{datos.contacto_correo}</td>
-                    <td class="right-col">{{datos.contacto_telefono}}</td>
+                    <td class="left-col">Correo</td>
+                    <td colspan="5" class="right-col">{{datos.contacto_correo}}</td>
+                </tr>
+                <tr>
+                    <td class="left-col">Teléfono</td>
+                    <td colspan="5" class="right-col">{{datos.contacto_telefono}}</td>
                 </tr>
                 <tr>
                     <td class="left-col">Página Web</td>
-                    <td class="right-col">{{datos.link}}</td>
+                    <td colspan="2" class="right-col">{{datos.link}}</td>
                 </tr>
                 <tr>
-                    <td class="left-col">Transferencias Inmediatas</td>
-                    <td class="right-col">{{datos.bancos_inmediato}}</td>
+                    <td class="left-col">Transferencia Inmediata</td>
+                    {% for banco in datos.bancos_inmediato %}
+                    <td class="rs-col">{{banco}}</td>
+                    {% endfor %}
                 </tr>
                 <tr>
-                    <td class="left-col">Transferencias Interbancarias</td>
-                    <td class="right-col">{{datos.bancos_interbancario}}</td>
+                    <td class="left-col">Transferencia Interbancaria</td>
+                    {% for banco in datos.bancos_interbancario %}
+                    <td class="rs-col">{{banco}}</td>
+                    {% endfor %}
                 </tr>
                 <tr>
                     <td class="left-col">Horario</td>
-                    <td class="right-col">{{datos.horario}}</td>
+                    <td colspan="5" class="right-col">{{datos.horario}}</td>
                 </tr>
                 <tr>
                     <td class="left-col">Apps</td>
@@ -95,14 +102,20 @@
                 </tr>
                 <tr>
                     <td class="left-col">Redes Sociales</td>
-                    <td class="right-col">{{datos.facebook}}</td>
-                    <td class="right-col">{{datos.twitter}}</td>
-                    <td class="right-col">{{datos.instagram}}</td>
-                    <td class="right-col">{{datos.linkedin}}</td>
-                    <td class="right-col">{{datos.youtube}}</td>
+                    <td class="rs-col"><a href={{datos.facebook}}><img
+                                src="{{ url_for('static', filename='images/logo-facebook.png') }}"></a></td>
+                    <td class="rs-col"><a href={{datos.twitter}}><img
+                                src="{{ url_for('static', filename='images/logo-twitter.png') }}"></a></td>
+                    <td class="rs-col"><a href={{datos.instagram}}><img
+                                src="{{ url_for('static', filename='images/logo-instagram.png') }}"></a></td>
+                    <td class="rs-col"><a href={{datos.linkedin}}><img
+                                src="{{ url_for('static', filename='images/logo-linkedin.png') }}"></a></td>
+                    <td class="rs-col"><a href={{datos.youtube}}><img
+                                src="{{ url_for('static', filename='images/logo-youtube.png') }}"></a></td>
                 </tr>
             </table>
         </div>
+
         <!--- 
         <div class="historicas">
             <div class="section-title">

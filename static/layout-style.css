@@ -1,16 +1,16 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;550;700;900&family=Raleway:wght@400;600;800;900&display=swap");
 :root {
-  --primary-color: #667AF3;
+  --primary-color: #667af3;
 }
 
 body {
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
   margin: 0;
-  font-family: 'Poppins';
+  font-family: "Poppins";
 }
 
 .container {
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
   width: 1024px;
   margin-left: auto;
   margin-right: auto;

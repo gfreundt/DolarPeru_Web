@@ -1,17 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;550;700;900&family=Raleway:wght@400;600;800;900&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;550;700;900&family=Raleway:wght@400;600;800;900&display=swap");
 
 :root {
-    --primary-color: #667AF3;
+    --primary-color: #667af3;
 }
-  
+
 body {
-    background-color: #F2F2F2;
+    background-color: #f2f2f2;
     margin: 0;
-    font-family: 'Poppins';
+    font-family: "Poppins";
 }
 
 .container {
-    background-color: #F2F2F2;
+    background-color: #f2f2f2;
     width: 1024px;
     margin-left: auto;
     margin-right: auto;
@@ -21,7 +21,12 @@ header {
     font-size: 40px;
     font-weight: 700;
     margin-top: 5px;
-    padding-top:10px;
+    padding-top: 10px;
+
+    a {
+        text-decoration: none;
+        color: black;
+    }
 
     span {
         color: var(--primary-color);
@@ -34,28 +39,27 @@ nav {
     padding-top: 6px;
     padding-bottom: 6px;
     border-radius: 25px;
-    
 
     a {
         color: var(--primary-color);
         font-size: 20px;
         font-weight: 600;
-        text-decoration: none;  
+        text-decoration: none;
         padding-left: 45px;
-        padding-right: 45px;      
+        padding-right: 45px;
     }
 }
 
 main {
     text-align: center;
-    
+
     .title {
         padding-top: 25px;
         color: gray;
         font-size: 35px;
         font-weight: 800;
         text-transform: uppercase;
-        
+
         span {
             color: green;
         }
@@ -64,7 +68,7 @@ main {
     .actualizado {
         margin-top: -10px;
         color: gray;
-        font-size:15px;
+        font-size: 15px;
         font-weight: 700;
     }
 
@@ -131,55 +135,51 @@ main {
 
         .title-intraday {
             font-weight: bold;
-            width:33%;
+            width: 33%;
             float: left;
             text-align: center;
         }
 
         .title-last-5-days {
             font-weight: bold;
-            width:33%;
+            width: 33%;
             float: left;
             text-align: center;
         }
 
         .title-last-30-days {
             font-weight: bold;
-            width:33%;
+            width: 33%;
             float: left;
             text-align: center;
         }
-
     }
-    
-    
 
     .main-info {
-
         background-color: rgb(223, 227, 231);
         text-decoration: none;
-  
+
         .quote-box-left {
             width: 480px;
             padding-top: 10px;
             padding-left: 20px;
             padding-bottom: 10px;
             text-align: left;
-            float:left;
+            float: left;
             text-decoration: none;
 
             .quotes-left {
                 height: 30px;
-                color:black;
+                color: black;
                 font-size: 25px;
                 font-weight: bold;
                 line-height: 30px;
                 text-align: right;
                 padding-right: 20px;
-                
+
                 a {
                     color: black;
-                    text-decoration: none;  
+                    text-decoration: none;
                 }
             }
         }
@@ -192,10 +192,10 @@ main {
             padding-bottom: 10px;
             text-align: left;
             text-decoration: none;
-            
+
             .quotes-right {
                 height: 30px;
-                color:black;
+                color: black;
                 font-size: 25px;
                 font-weight: bold;
                 line-height: 30px;
@@ -205,19 +205,16 @@ main {
                 a {
                     color: black;
                     text-decoration: none;
-                } 
+                }
             }
         }
-        
+
         .logos {
             height: 30px;
             padding-right: 30px;
             padding-left: 30px;
         }
-
-        
     }
-
 }
 
 footer {
@@ -225,7 +222,7 @@ footer {
     padding-top: 5px;
     padding-bottom: 5px;
     font-size: 10px;
-    padding-right: 5px ;
+    padding-right: 5px;
 
     .contact {
         padding-left: 25px;
@@ -239,5 +236,3 @@ footer {
         text-align: right;
     }
 }
-
-

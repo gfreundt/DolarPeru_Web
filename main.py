@@ -87,7 +87,10 @@ def stats():
 @app.route("/fintech/<path:id>")
 def fintech(id):
     print(id, WEBFILE_PATH)
-    data = get_data_from_bucket(GCLOUD_WEBFILE_PATH + r"/webfile-" + id + ".json")
+    if "TEST" in sys.argv:
+        data = get_data_from_file(WEBFILE_PATH + r"/webfile-" + id + ".json")
+    else:
+        data = get_data_from_bucket(GCLOUD_WEBFILE_PATH + r"/webfile-" + id + ".json")
     return render_template(
         "fintech.html",
         id=id,
